@@ -1,0 +1,124 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Web渗透测试思路整理 · WangEX`s Blog</title><meta name="description" content="Web渗透测试思路整理 - wangex"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.jpg"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://goodwaf.com/atom.xml" title="WangEX`s Blog"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.jpg" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://github.com/zhjl120" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">Web渗透测试思路整理</h1><div class="post-info">2016年12月27日</div><div class="post-content"><h4 id="信息收集："><a href="#信息收集：" class="headerlink" title="信息收集："></a>信息收集：</h4><ul>
+<li><p>域名/IP</p>
+<ul>
+<li>子域名列表</li>
+<li>whois: 注册地址，注册人，联系方式等</li>
+<li>whois反查： 同ip有哪些站点(旁注)，同一个注册人注册了哪些域名</li>
+<li>社工注册人信息</li>
+</ul>
+</li>
+<li><p>指纹识别：</p>
+<ul>
+<li>操作系统及版本</li>
+<li>数据库类型及版本</li>
+<li>web容器类型及版本</li>
+<li>web服务端语言类型及版本</li>
+<li>web开发框架类型及版本</li>
+<li>web应用类型及版本</li>
+<li>其它识别方式：<ul>
+<li>HTTP Header包含操作系统类型，web容器类型及版本</li>
+<li>Nmap扫描端口及操作系统信息</li>
+<li>查看源码审查web应用类型</li>
+<li>浏览站点识别服务端使用的语言</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>敏感文件及目录:</p>
+<ul>
+<li>robots.txt</li>
+<li>网站后台</li>
+<li>文件、目录爆破</li>
+<li>google hacking</li>
+</ul>
+</li>
+<li><p>站点地图：</p>
+<ul>
+<li>awvs爬虫</li>
+<li>burpsuite爬虫</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="工具："><a href="#工具：" class="headerlink" title="工具："></a>工具：</h4><ul>
+<li>nmap, msf, sqlmap, awvs, burpsuite</li>
+</ul>
+<hr>
+<h4 id="切入点："><a href="#切入点：" class="headerlink" title="切入点："></a>切入点：</h4><ul>
+<li><p>第三方内容（广告统计/mockup）<br>Web前端框架(JQuery/Bootstrap/HTML5)</p>
+<ul>
+<li>框架类型</li>
+<li>框架版本<pre><code>-   ---&gt; 特定框架及版本的漏洞
+-   ===&gt; XSS 
+</code></pre></li>
+</ul>
+</li>
+<li><p>Web应用（BBS/CMS/BLOG）</p>
+<ul>
+<li>应用类型</li>
+<li>应用版本<pre><code>-  ---&gt; 特定应用及版本的漏洞
+-  ===&gt; 远程命令执行/目录遍历/未授权访问/绕过上传/SQL注入
+</code></pre></li>
+</ul>
+</li>
+<li><p>Web开发框架（Structs/ThinkPHP/Django）</p>
+<ul>
+<li>框架类型</li>
+<li>框架版本<pre><code>-  ---&gt; 特定框架及版本的漏洞
+-  ===&gt; 远程命令执行
+</code></pre></li>
+</ul>
+</li>
+<li><p>Web服务端语言（PHP/ASP/JSP）</p>
+<ul>
+<li>语言类型</li>
+<li>语言版本<pre><code>-  ---&gt; 特定语言及版本漏洞
+-  ===&gt; 参数污染
+</code></pre></li>
+</ul>
+</li>
+<li><p>Web容器（IIS/Apache/Nginx）</p>
+<ul>
+<li>容器类型</li>
+<li>容器版本<pre><code>-  ---&gt; 特定容器及版本的漏洞
+-  ===&gt; 远程溢出/DOS
+</code></pre></li>
+</ul>
+</li>
+<li><p>存储（数据库存储/内存存储/文件存储）</p>
+<ul>
+<li>数据库类型</li>
+<li>数据库版本<pre><code>-  ---&gt; 特定数据库的漏洞
+-  ---&gt; 弱口令爆破
+</code></pre></li>
+</ul>
+</li>
+<li><p>操作系统（linux/windows）</p>
+<ul>
+<li>操作系统类型</li>
+<li>操作系统版本<pre><code>-  ---&gt; 特定操作系统的漏洞
+-  ===&gt; 系统命令执行
+</code></pre></li>
+<li>开放端口(服务)<ul>
+<li>服务类型</li>
+<li>服务版本<ul>
+<li>—&gt; 特定服务特定版本的漏洞</li>
+<li>—&gt; 常见端口入侵方法</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div></article></div></main><footer><div class="paginator"><a href="/2016/12/27/Bypass-WAF-Cookbook/" class="prev">PREV</a><a href="/2016/12/27/PHP代码审计学习笔记/" class="next">NEXT</a></div><div data-thread-key="2016/12/27/Web渗透测试思路整理/" data-title="Web渗透测试思路整理" data-url="http://goodwaf.com/2016/12/27/Web渗透测试思路整理/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"seansun"};
+(function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+
+</script><div class="copyright"><p>© 2015 - 2016 <a href="http://goodwaf.com">wangex</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-65933410-1",'auto');ga('send','pageview');</script></body></html>

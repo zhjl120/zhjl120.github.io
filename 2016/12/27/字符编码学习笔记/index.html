@@ -1,0 +1,78 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 字符编码学习笔记 · WangEX`s Blog</title><meta name="description" content="字符编码学习笔记 - wangex"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.jpg"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://goodwaf.com/atom.xml" title="WangEX`s Blog"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.jpg" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://github.com/zhjl120" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">字符编码学习笔记</h1><div class="post-info">2016年12月27日</div><div class="post-content"><ul>
+<li><p><strong>ACSII</strong> </p>
+<ul>
+<li><strong>规定</strong>：一个字符由一个字节存储。</li>
+<li><strong>范围</strong>：<ul>
+<li>前32位（0x00 — 0x20）为控制码。</li>
+<li>第32位至127位（0x20 — 0x7f）为空格、标点符号、数字、字母。</li>
+<li>127位以后不用。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>扩展字符集</strong> </p>
+<ul>
+<li><strong>原因</strong>： 由于其它国家的字符太多，ASCII标准已经不够用，所以他们启用了127位以后的全部空位。</li>
+</ul>
+</li>
+<li><p><strong>GB2312</strong></p>
+<ul>
+<li><strong>原因</strong>：由于其它国家制定的扩展字符集并不适用于中文，所以中国人重新制定了符合本国国情的编码方式：GB2312（GB2312是对ASCII码的中文扩展）。</li>
+<li><strong>规定</strong>：小于127的字符意义同ASCII标准一样，但两个大于127的字符连在一起时，就表示一个汉字。</li>
+<li><strong>范围</strong>：<ul>
+<li>前一个字节（高字节）使用范围为：0xa1 — 0xf7</li>
+<li>后一个字节（低字节）使用范围为：0xa1 — oxfe</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>GBK</strong></p>
+<ul>
+<li><strong>原因</strong>：后来由于汉字实在太多，GB2312已经不够使用了，于是又制定了新的编码:GBK，取消了GB2312中对汉字低字节的限制。</li>
+<li><strong>规定</strong>:  小于127的字符意义同ASCII标准一样，如果遇到大于127位的字节则无论其后的一个字节是否是大于127都将这个两个字节视为一个汉字（GB2312要求两个字节都要大于127，但GBK取消了对低字节的要求）。</li>
+<li><strong>范围</strong>：<ul>
+<li>前一个字节（高字节）使用范围为：0x81 — 0xfe</li>
+<li>后一个字节（低字节）使用范围为：0x40 — 0xfe</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>GB18030</strong></p>
+<ul>
+<li><strong>原因</strong>:  由于GBK并没有包含少数民族的文字字符，所以又再次对GBK进行扩展以包含少数名族字符，由此又制定了新的编码GB18030，从此该编码方式可以完全表示中华民族的所有字符了。</li>
+</ul>
+</li>
+<li><p><strong>小结</strong>：人们为了统一称呼这些【汉字】编码方式，于是把它们都叫做DBCS（Double Byte Charecter Set，双字节字符集），它们最大的特点就是两个字节长的汉字字符和一个字节长的英文字符并存在一套编码系统里。因此在处理这些编码时要时刻注意每一个字节的值是否是大于127，如果小于则取按照ASCII标准取值，如过大于则表示一个汉字开始了，这时就要和它和后面一个字节一起组合起来识别为一个汉字字符。</p>
+</li>
+<li><p><strong>Unicode</strong></p>
+<ul>
+<li><strong>原因</strong>： 由于每个国家都制定了自己的一套编码体系，造成各个国家之间的字符编码互不兼容，于是ISO组织统一制定了能包含全球所有文化、字符、符号的编码标准：Universal Multiple-Octet Coded Character Set”，简称 UCS, 俗称 “UNICODE”。 </li>
+<li><strong>规定</strong>： Unicode规定所有字符都统一使用两个字节编码，即使用16位来统一表示所有字符，对于ASCII标准的字符保持其值不变，但字节长度由一个字节变成两个字节，所以英文字符的Unicode编码的高字节永远都为0，因此也造成了存储空间的浪费。</li>
+</ul>
+</li>
+<li><p><strong>UTF-8</strong></p>
+<ul>
+<li><strong>定义</strong>：  UTF即UCS Transfer Format（Unicode传输格式），utf-8是在网络上传输Unicode字符的一项标准，它是Unicode的主要实现方式之一。它每次传输8位数据，但它并不是直接对应Unicode的字节的值，而是为了传输的可靠性制定了一套从Unicode到utf-8的转换规则。</li>
+<li><strong>转换规则</strong>：<pre><code>Unicode             UTF-8
+0000 - 007F     0xxxxxxx
+0080 - 07FF        110xxxxx 10xxxxxx
+</code></pre> 0800 - FFFF     1110xxxx 10xxxxxx 10xxxxxx</li>
+<li><strong>举例</strong>： ‘汉’字的Unicode编码是：6C49，通过上表可以得出，它在0x0800到0xffff之间，所以它需要使用3个字节来传输，将6C49转位二进制： 0110 1100 0100 1001，按照utf-8的格式转换，第一个字节为：[1110]0110，第二个字节为:[10]110001，第三个字节为：[10]001001，所以将‘汉’字的unicode转换为utf-8之后的二进制是：11100110 10110001 10001001 ，即16进制E6 B1 89</li>
+</ul>
+</li>
+<li><p><strong>单字节</strong>： 由一个字节构成一个字符的编码。如ASCII</p>
+</li>
+<li><strong>多字节</strong>： 由一个或多个字节构成一个字符的编码。如GB2312、GBK</li>
+<li><strong>宽字节</strong>： 始终由两个字节构成一个字符的编码。如Unicode</li>
+</ul>
+</div></article></div></main><footer><div class="paginator"><a href="/2016/12/27/DedeCMS-CheckSql函数绕过/" class="prev">PREV</a><a href="/2016/12/27/Bypass-WAF-Cookbook/" class="next">NEXT</a></div><div data-thread-key="2016/12/27/字符编码学习笔记/" data-title="字符编码学习笔记" data-url="http://goodwaf.com/2016/12/27/字符编码学习笔记/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"seansun"};
+(function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+
+</script><div class="copyright"><p>© 2015 - 2016 <a href="http://goodwaf.com">wangex</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-65933410-1",'auto');ga('send','pageview');</script></body></html>

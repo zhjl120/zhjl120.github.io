@@ -1,0 +1,183 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> PHP代码审计学习笔记 · WangEX`s Blog</title><meta name="description" content="PHP代码审计学习笔记 - wangex"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.jpg"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://goodwaf.com/atom.xml" title="WangEX`s Blog"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.jpg" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://github.com/zhjl120" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">PHP代码审计学习笔记</h1><div class="post-info">2016年12月27日</div><div class="post-content"><h4 id="一、GPC"><a href="#一、GPC" class="headerlink" title="一、GPC"></a>一、GPC</h4><ol>
+<li>整数类型不受GPC影响</li>
+<li>$_SERVER变量不受GPC保护</li>
+<li>$_FILES变量不受GPC保护</li>
+<li>宽字节注入</li>
+<li>数据库操作容易忘记添加单引号的地方如：in()/limit/order by/group by</li>
+<li>只过滤了变量的值，但没有过滤key(有的程序会在代码中使用key，如带入SQL语句)</li>
+<li>GPC为on的时候，在php4和php&lt;5.2.1的情况下GPC不处理数组第一维变量的key</li>
+<li>在对参数进行过滤后又对其进行了其它的操作，如substr，str_replace等，这可能导致转义符被删除</li>
+</ol>
+<h4 id="二、特性"><a href="#二、特性" class="headerlink" title="二、特性"></a>二、特性</h4><table>
+<thead>
+<tr>
+<th style="text-align:left">函数/语法</th>
+<th style="text-align:left">特性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">in_array</td>
+<td style="text-align:left">比较之前会对数据进行类型转换</td>
+</tr>
+<tr>
+<td style="text-align:left">is_numeric</td>
+<td style="text-align:left">十六进制可绕过</td>
+</tr>
+<tr>
+<td style="text-align:left">intval</td>
+<td style="text-align:left">会对字符串进行类型转换，只要第一个字符是数字即可转换成功</td>
+</tr>
+<tr>
+<td style="text-align:left">iconv</td>
+<td style="text-align:left">导致字符串截断</td>
+</tr>
+<tr>
+<td style="text-align:left">==与===</td>
+<td style="text-align:left">双等号两边如果变量类型不同则会做类型转换</td>
+</tr>
+<tr>
+<td style="text-align:left">``</td>
+<td style="text-align:left">反引号命令执行</td>
+</tr>
+<tr>
+<td style="text-align:left">“”</td>
+<td style="text-align:left">双引号变量解析</td>
+</tr>
+<tr>
+<td style="text-align:left">\$a(\$b)</td>
+<td style="text-align:left">动态函数执行</td>
+</tr>
+<tr>
+<td style="text-align:left">is_file</td>
+<td style="text-align:left">使用通配符（&lt;,&gt;）可绕过</td>
+</tr>
+</tbody>
+</table>
+<h4 id="三、危险函数"><a href="#三、危险函数" class="headerlink" title="三、危险函数"></a>三、危险函数</h4><hr>
+<ul>
+<li><strong>代码执行</strong><pre><code>1.  eval
+2.  preg_replace
+3.  assert
+4.  call_user_func
+5.  call_user_func_array
+6.  create_function
+7.  array_map
+</code></pre></li>
+</ul>
+<hr>
+<ul>
+<li><strong>文件包含</strong><pre><code>1.  include
+2.  require
+3.  require_once
+4.  include_once
+</code></pre></li>
+</ul>
+<hr>
+<ul>
+<li><strong>文件读取</strong><pre><code>1.  file_get_contents
+2.  highlight_file
+3.  fopen
+4.  readfile
+5.  fread
+6.  fgetss
+7.  fgets
+8.  parse_ini_file
+9.  show_source
+10.  file()
+</code></pre></li>
+</ul>
+<hr>
+<ul>
+<li><strong>文件上传</strong><pre><code>1.  move_uploaded_file
+</code></pre></li>
+</ul>
+<hr>
+<ul>
+<li><strong>命令执行</strong><pre><code>1.  exec
+2.  system
+3.  popen
+4.  passthru
+5.  proc_open
+6.  pcntl_exec
+7.  shell_exec
+8.  ``
+</code></pre></li>
+</ul>
+<hr>
+<ul>
+<li><strong>变量覆盖</strong><pre><code>1.  $$
+2.  extract
+3.  parse_str
+4.  mb_parse_str
+5.  import_request_variables
+</code></pre></li>
+</ul>
+<hr>
+<ul>
+<li><strong>变量的编码与解码</strong><pre><code>1.  stripslashes
+2.  base64_decode
+3.  rawurldecode
+4.  urldecode
+5.  unserialize
+6.  iconv
+7.  mb_convert_encoding
+</code></pre></li>
+</ul>
+<hr>
+<ul>
+<li><strong>跨站脚本</strong><pre><code>1.  echo
+2.  print
+3.  printf
+4.  sprintf
+5.  print_f
+6.  vprintf
+7.  die
+8.  var_dump
+9.  var_export
+</code></pre></li>
+</ul>
+<hr>
+<ul>
+<li><strong>反序列化</strong><pre><code>1.  serialize
+2.  unserialize
+3.  __construct  构造函数
+4.  __destruct    析构函数
+5.  __toString    打印对象时自动调用
+6.  __sleep        序列化时自动调用
+7.  __wakeup    反序列化时自动调用
+</code></pre></li>
+</ul>
+<hr>
+<ul>
+<li><strong>枚举</strong><pre><code>1.  rand           使用rand处理session时，攻击者很容易暴力破解出session
+</code></pre></li>
+</ul>
+<hr>
+<h4 id="四、阅读技巧"><a href="#四、阅读技巧" class="headerlink" title="四、阅读技巧"></a>四、阅读技巧</h4><ol>
+<li>从index文件读起，了解程序运行流程</li>
+<li>检查程序入口处做了哪些安全处理</li>
+<li>检查数据库入口处做了哪些安全处理</li>
+<li>检查数据库连接处代码</li>
+<li>检查登陆、注册、找回密码、绑定邮箱、文件管理和文件上传等功能点</li>
+<li>理清程序调用流程以及输入数据的流向，这样可以节约很多时间,可以有目的的查找漏洞</li>
+</ol>
+<h4 id="五、新技能"><a href="#五、新技能" class="headerlink" title="五、新技能"></a>五、新技能</h4><ol>
+<li>文件包含截断新姿势：<a href="http://www.hackersb.cn/hacker/105.html" target="_blank" rel="external">http://www.hackersb.cn/hacker/105.html</a><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">　　$a = $_GET[<span class="string">'file'</span>];</div><div class="line">　　<span class="keyword">include</span> $a.<span class="string">'.html.php'</span>;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>在可以控制协议的情况下,首先新建一个hello.html.php，内容为phpinfo(),然后压缩成zip，然后访问<a href="http://localhost/test/blog.php?file=zip://test.zip%23hello" target="_blank" rel="external">http://localhost/test/blog.php?file=zip://test.zip%23hello</a><br>        注意：变量名需要在开头以控制协议</p>
+<ol>
+<li>功能同上，协议更换为phar, 访问方式为：<a href="http://localhost/test/blog.php?file=phar://1.zip/1.php" target="_blank" rel="external">http://localhost/test/blog.php?file=phar://1.zip/1.php</a></li>
+</ol>
+</div></article></div></main><footer><div class="paginator"><a href="/2016/12/27/Web渗透测试思路整理/" class="prev">PREV</a><a href="/2016/12/27/SQL注入学习笔记/" class="next">NEXT</a></div><div data-thread-key="2016/12/27/PHP代码审计学习笔记/" data-title="PHP代码审计学习笔记" data-url="http://goodwaf.com/2016/12/27/PHP代码审计学习笔记/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"seansun"};
+(function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+
+</script><div class="copyright"><p>© 2015 - 2016 <a href="http://goodwaf.com">wangex</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-65933410-1",'auto');ga('send','pageview');</script></body></html>
