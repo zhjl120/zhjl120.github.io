@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://goodwaf.com/"/>
-  <updated>2016-12-27T08:12:57.747Z</updated>
+  <updated>2016-12-27T04:31:26.107Z</updated>
   <id>http://goodwaf.com/</id>
   
   <author>
@@ -16,11 +16,38 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Hello World</title>
+    <link href="http://goodwaf.com/2016/12/27/hello-world/"/>
+    <id>http://goodwaf.com/2016/12/27/hello-world/</id>
+    <published>2016-12-27T04:31:26.107Z</published>
+    <updated>2016-12-27T04:31:26.107Z</updated>
+    
+    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>DedeCMS CheckSql函数绕过</title>
-    <link href="http://goodwaf.com/2016/12/27/DedeCMS-CheckSql%E5%87%BD%E6%95%B0%E7%BB%95%E8%BF%87/"/>
-    <id>http://goodwaf.com/2016/12/27/DedeCMS-CheckSql函数绕过/</id>
-    <published>2016-12-27T08:12:20.000Z</published>
-    <updated>2016-12-27T08:12:57.747Z</updated>
+    <link href="http://goodwaf.com/2016/11/30/DedeCMS-CheckSql%E5%87%BD%E6%95%B0%E7%BB%95%E8%BF%87/"/>
+    <id>http://goodwaf.com/2016/11/30/DedeCMS-CheckSql函数绕过/</id>
+    <published>2016-11-30T08:12:20.000Z</published>
+    <updated>2016-12-27T08:16:27.331Z</updated>
     
     <content type="html"><![CDATA[<p>DedeCMS自带了一个函数来检查SQL语句以防止注入，该函数是由80sec提供的通用SQL过滤函数。很多其它程序也使用了该函数，最近就碰到一个。但是由于该函数的设计缺陷导致其可以被绕过。代码如下:</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//SQL语句过滤程序，由80sec提供，这里作了适当的修改</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">CheckSql</span><span class="params">($db_string,$querytype=<span class="string">'select'</span>)</span></span></div><div class="line">&#123;</div><div class="line">	$clean = <span class="string">''</span>;</div><div class="line">	$error=<span class="string">''</span>;</div><div class="line">	$old_pos = <span class="number">0</span>;</div><div class="line">	$pos = <span class="number">-1</span>;</div><div class="line"></div><div class="line">	<span class="comment">//如果是普通查询语句，直接过滤一些特殊语法</span></div><div class="line">	<span class="keyword">if</span>($querytype==<span class="string">'select'</span>)</div><div class="line">	&#123;</div><div class="line">		$notallow1 = <span class="string">"[^0-9a-z@\._-]&#123;1,&#125;(union|sleep|benchmark|load_file|outfile)[^0-9a-z@\.-]&#123;1,&#125;"</span>;</div><div class="line"></div><div class="line">		<span class="comment">//$notallow2 = "--|/\*";</span></div><div class="line">		<span class="keyword">if</span>(m_eregi($notallow1,$db_string))</div><div class="line">		&#123;</div><div class="line">			fputs(fopen($log_file,<span class="string">'a+'</span>),<span class="string">"$userIP||$getUrl||$db_string||SelectBreak\r\n"</span>);</div><div class="line">			<span class="keyword">exit</span>(<span class="string">"&lt;font size='5' color='red'&gt;Safe Alert: Request Error step 1 !&lt;/font&gt;"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">//完整的SQL检查</span></div><div class="line">	<span class="keyword">while</span> (<span class="keyword">true</span>)</div><div class="line">	&#123;</div><div class="line">		$pos = strpos($db_string, <span class="string">'\''</span>, $pos + <span class="number">1</span>);</div><div class="line">		<span class="keyword">if</span> ($pos === <span class="keyword">false</span>)</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">		$clean .= substr($db_string, $old_pos, $pos - $old_pos);</div><div class="line">		<span class="keyword">while</span> (<span class="keyword">true</span>)</div><div class="line">		&#123;</div><div class="line">			$pos1 = strpos($db_string, <span class="string">'\''</span>, $pos + <span class="number">1</span>);</div><div class="line">			$pos2 = strpos($db_string, <span class="string">'\\'</span>, $pos + <span class="number">1</span>);</div><div class="line">			<span class="keyword">if</span> ($pos1 === <span class="keyword">false</span>)</div><div class="line">			&#123;</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">elseif</span> ($pos2 == <span class="keyword">false</span> || $pos2 &gt; $pos1)</div><div class="line">			&#123;</div><div class="line">				$pos = $pos1;</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">			$pos = $pos2 + <span class="number">1</span>;</div><div class="line">		&#125;</div><div class="line">		$clean .= <span class="string">'$s$'</span>;</div><div class="line">		$old_pos = $pos + <span class="number">1</span>;</div><div class="line">	&#125;</div><div class="line">	$clean .= substr($db_string, $old_pos);</div><div class="line">	$clean = trim(strtolower(preg_replace(<span class="keyword">array</span>(<span class="string">'~\s+~s'</span> ), <span class="keyword">array</span>(<span class="string">' '</span>), $clean)));</div><div class="line"></div><div class="line">	<span class="comment">//老版本的Mysql并不支持union，常用的程序里也不使用union，但是一些黑客使用它，所以检查它</span></div><div class="line">	<span class="keyword">if</span> (strpos($clean, <span class="string">'union'</span>) !== <span class="keyword">false</span> &amp;&amp; preg_match(<span class="string">'~(^|[^a-z])union($|[^[a-z])~s'</span>, $clean) != <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		$fail = <span class="keyword">true</span>;</div><div class="line">		$error=<span class="string">"union detect"</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">//发布版本的程序可能比较少包括--,#这样的注释，但是黑客经常使用它们</span></div><div class="line">	<span class="keyword">elseif</span> (strpos($clean, <span class="string">'/*'</span>) &gt; <span class="number">2</span> || strpos($clean, <span class="string">'--'</span>) !== <span class="keyword">false</span> || strpos($clean, <span class="string">'#'</span>) !== <span class="keyword">false</span>)</div><div class="line">	&#123;</div><div class="line">		$fail = <span class="keyword">true</span>;</div><div class="line">		$error=<span class="string">"comment detect"</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">//这些函数不会被使用，但是黑客会用它来操作文件，down掉数据库</span></div><div class="line">	<span class="keyword">elseif</span> (strpos($clean, <span class="string">'sleep'</span>) !== <span class="keyword">false</span> &amp;&amp; preg_match(<span class="string">'~(^|[^a-z])sleep($|[^[a-z])~s'</span>, $clean) != <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		$fail = <span class="keyword">true</span>;</div><div class="line">		$error=<span class="string">"slown down detect"</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">elseif</span> (strpos($clean, <span class="string">'benchmark'</span>) !== <span class="keyword">false</span> &amp;&amp; preg_match(<span class="string">'~(^|[^a-z])benchmark($|[^[a-z])~s'</span>, $clean) != <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		$fail = <span class="keyword">true</span>;</div><div class="line">		$error=<span class="string">"slown down detect"</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">elseif</span> (strpos($clean, <span class="string">'load_file'</span>) !== <span class="keyword">false</span> &amp;&amp; preg_match(<span class="string">'~(^|[^a-z])load_file($|[^[a-z])~s'</span>, $clean) != <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		$fail = <span class="keyword">true</span>;</div><div class="line">		$error=<span class="string">"file fun detect"</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">elseif</span> (strpos($clean, <span class="string">'into outfile'</span>) !== <span class="keyword">false</span> &amp;&amp; preg_match(<span class="string">'~(^|[^a-z])into\s+outfile($|[^[a-z])~s'</span>, $clean) != <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		$fail = <span class="keyword">true</span>;</div><div class="line">		$error=<span class="string">"file fun detect"</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">//老版本的MYSQL不支持子查询，我们的程序里可能也用得少，但是黑客可以使用它来查询数据库敏感信息</span></div><div class="line">	<span class="keyword">elseif</span> (preg_match(<span class="string">'~\([^)]*?select~s'</span>, $clean) != <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		$fail = <span class="keyword">true</span>;</div><div class="line">		$error=<span class="string">"sub select detect"</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (!<span class="keyword">empty</span>($fail))</div><div class="line">	&#123;</div><div class="line">		fputs(fopen($log_file,<span class="string">'a+'</span>),<span class="string">"$userIP||$getUrl||$db_string||$error\r\n"</span>);</div><div class="line">		<span class="keyword">exit</span>(<span class="string">"&lt;font size='5' color='red'&gt;Safe Alert: Request Error step 2!&lt;/font&gt;"</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span></div><div class="line">	&#123;</div><div class="line">		<span class="keyword">return</span> $db_string;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -46,10 +73,10 @@
   
   <entry>
     <title>字符编码学习笔记</title>
-    <link href="http://goodwaf.com/2016/12/27/%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    <id>http://goodwaf.com/2016/12/27/字符编码学习笔记/</id>
-    <published>2016-12-27T08:11:42.000Z</published>
-    <updated>2016-12-27T08:11:55.559Z</updated>
+    <link href="http://goodwaf.com/2016/10/27/%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    <id>http://goodwaf.com/2016/10/27/字符编码学习笔记/</id>
+    <published>2016-10-27T08:11:42.000Z</published>
+    <updated>2016-12-27T08:16:07.979Z</updated>
     
     <content type="html"><![CDATA[<ul>
 <li><p><strong>ACSII</strong> </p>
@@ -136,10 +163,10 @@
   
   <entry>
     <title>Bypass WAF Cookbook</title>
-    <link href="http://goodwaf.com/2016/12/27/Bypass-WAF-Cookbook/"/>
-    <id>http://goodwaf.com/2016/12/27/Bypass-WAF-Cookbook/</id>
-    <published>2016-12-27T08:10:04.000Z</published>
-    <updated>2016-12-27T08:11:03.559Z</updated>
+    <link href="http://goodwaf.com/2016/10/25/Bypass-WAF-Cookbook/"/>
+    <id>http://goodwaf.com/2016/10/25/Bypass-WAF-Cookbook/</id>
+    <published>2016-10-25T08:10:04.000Z</published>
+    <updated>2016-12-27T08:15:54.195Z</updated>
     
     <content type="html"><![CDATA[<h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>本文整理自wooyun drops上的几篇文章以及自己fuzz出来的一些特征，wooyun文章以《Bypass WAF Cookbook》内容为主体，作者为MayIKissYou，本文是精简过后的内容，主要用于自己平时查询。更详细的内容请参考原文。</p>
 <p>一点感悟，所谓bypass的核心就是：寻找用户数据从用户端到最终数据处理端的中间不同节点对数据转换的特性。因为不同节点对数据会有不同的处理方式，而利用这些不同的特性即可以造成bypass，例如数据从客户端发出后，会经过WAF引擎、Web服务器、脚本语言解析器、Web应用程序、数据库，而这里面无论哪一层发现新的特性，都有可能绕过WAF，更多的实例在下文中举出。</p>
@@ -263,10 +290,10 @@ post form-data内容处
   
   <entry>
     <title>Web渗透测试思路整理</title>
-    <link href="http://goodwaf.com/2016/12/27/Web%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/"/>
-    <id>http://goodwaf.com/2016/12/27/Web渗透测试思路整理/</id>
-    <published>2016-12-27T08:08:32.000Z</published>
-    <updated>2016-12-27T08:08:48.775Z</updated>
+    <link href="http://goodwaf.com/2016/10/23/Web%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/"/>
+    <id>http://goodwaf.com/2016/10/23/Web渗透测试思路整理/</id>
+    <published>2016-10-23T08:08:32.000Z</published>
+    <updated>2016-12-27T08:15:39.847Z</updated>
     
     <content type="html"><![CDATA[<h4 id="信息收集："><a href="#信息收集：" class="headerlink" title="信息收集："></a>信息收集：</h4><ul>
 <li><p>域名/IP</p>
@@ -398,10 +425,10 @@ post form-data内容处
   
   <entry>
     <title>PHP代码审计学习笔记</title>
-    <link href="http://goodwaf.com/2016/12/27/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    <id>http://goodwaf.com/2016/12/27/PHP代码审计学习笔记/</id>
-    <published>2016-12-27T08:06:59.000Z</published>
-    <updated>2016-12-27T08:07:18.183Z</updated>
+    <link href="http://goodwaf.com/2016/10/20/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    <id>http://goodwaf.com/2016/10/20/PHP代码审计学习笔记/</id>
+    <published>2016-10-20T08:06:59.000Z</published>
+    <updated>2016-12-27T08:15:25.127Z</updated>
     
     <content type="html"><![CDATA[<h4 id="一、GPC"><a href="#一、GPC" class="headerlink" title="一、GPC"></a>一、GPC</h4><ol>
 <li>整数类型不受GPC影响</li>
@@ -591,12 +618,13 @@ post form-data内容处
   
   <entry>
     <title>SQL注入学习笔记</title>
-    <link href="http://goodwaf.com/2016/12/27/SQL%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    <id>http://goodwaf.com/2016/12/27/SQL注入学习笔记/</id>
-    <published>2016-12-27T07:14:36.000Z</published>
-    <updated>2016-12-27T07:53:37.547Z</updated>
+    <link href="http://goodwaf.com/2016/10/19/SQL%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    <id>http://goodwaf.com/2016/10/19/SQL注入学习笔记/</id>
+    <published>2016-10-19T07:14:36.000Z</published>
+    <updated>2016-12-27T08:18:55.119Z</updated>
     
-    <content type="html"><![CDATA[<h3 id="一、SQL注入分类"><a href="#一、SQL注入分类" class="headerlink" title="一、SQL注入分类"></a>一、SQL注入分类</h3><ul>
+    <content type="html"><![CDATA[<p>举个列子，比如有一个注入点，无论sql语句是否执行完成都返回同一个页面，即页面在正常情况下是无状态的，所以基于联合查询的注入方法和基于布尔注入的方法都不可行。而同时如果sql语句执行出错则返回一个错误页面（并没有具体的错误信息），看起来也不满足报错注入的要求，但只要将它们一结合,实际上仍然可以进行布尔盲注。我们可以构造一条sql语句，如果查询成功则返回正常数据，如果查询失败则强制报错，那么我们就得到了一个判断sql执行状态的机制: 如果返回正常页面,则数据库查询成果，如果返回错误页面，则数据库查询失败。从而我们可以以此完成一次布尔盲注。<br><a id="more"></a></p>
+<h3 id="一、SQL注入分类"><a href="#一、SQL注入分类" class="headerlink" title="一、SQL注入分类"></a>一、SQL注入分类</h3><ul>
 <li><strong>联合查询型</strong></li>
 <li><strong>报错型</strong></li>
 <li><strong>盲注型</strong><ul>
@@ -644,36 +672,7 @@ post form-data内容处
     
     <summary type="html">
     
-      &lt;h3 id=&quot;一、SQL注入分类&quot;&gt;&lt;a href=&quot;#一、SQL注入分类&quot; class=&quot;headerlink&quot; title=&quot;一、SQL注入分类&quot;&gt;&lt;/a&gt;一、SQL注入分类&lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;联合查询型&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;str
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="http://goodwaf.com/2016/12/27/hello-world/"/>
-    <id>http://goodwaf.com/2016/12/27/hello-world/</id>
-    <published>2016-12-27T04:31:26.107Z</published>
-    <updated>2016-12-27T04:31:26.107Z</updated>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
+      &lt;p&gt;举个列子，比如有一个注入点，无论sql语句是否执行完成都返回同一个页面，即页面在正常情况下是无状态的，所以基于联合查询的注入方法和基于布尔注入的方法都不可行。而同时如果sql语句执行出错则返回一个错误页面（并没有具体的错误信息），看起来也不满足报错注入的要求，但只要将它们一结合,实际上仍然可以进行布尔盲注。我们可以构造一条sql语句，如果查询成功则返回正常数据，如果查询失败则强制报错，那么我们就得到了一个判断sql执行状态的机制: 如果返回正常页面,则数据库查询成果，如果返回错误页面，则数据库查询失败。从而我们可以以此完成一次布尔盲注。&lt;br&gt;
     
     </summary>
     
