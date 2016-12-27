@@ -147,7 +147,7 @@
     <link href="http://goodwaf.com/2016/10/25/Bypass-WAF-Cookbook/"/>
     <id>http://goodwaf.com/2016/10/25/Bypass-WAF-Cookbook/</id>
     <published>2016-10-25T08:10:04.000Z</published>
-    <updated>2016-12-27T08:41:11.847Z</updated>
+    <updated>2016-12-27T08:58:48.862Z</updated>
     
     <content type="html"><![CDATA[<h4 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h4><p>本文整理自wooyun drops上的几篇文章以及自己fuzz出来的一些特征，wooyun文章以《Bypass WAF Cookbook》内容为主体，作者为MayIKissYou，本文是精简过后的内容，主要用于自己平时查询。更详细的内容请参考原文。</p>
 <a id="more"></a>
@@ -159,16 +159,13 @@
 </li>
 <li>iis + asp环境:<ul>
 <li><strong>%特性</strong>: asp+iis环境下会忽略掉百分号，如：payload为[sele%ct], 解析出来后则是[select] </li>
-<li><strong>另类%u特性</strong>: unicode在iis解析之后会被转换成multibyte，但是转换的过程中可能出现:多个widechar可能会转换为同一个字符。<pre><code>如：select中的e对应的unicode为%u0065，但是%u00f0同样会被转换成为e。
-</code></pre></li>
+<li><strong>另类%u特性</strong>: unicode在iis解析之后会被转换成multibyte，但是转换的过程中可能出现:多个widechar可能会转换为同一个字符。<br>如：select中的e对应的unicode为%u0065，但是%u00f0同样会被转换成为e。</li>
 </ul>
 </li>
 </ul>
 <h5 id="2-apache服务器"><a href="#2-apache服务器" class="headerlink" title="2. apache服务器"></a>2. apache服务器</h5><ul>
-<li><strong>畸形method(header头中)</strong> <pre><code>某些apache版本在做GET请求的时候，无论method为何值均会取出GET的内容。如请求的method名为DOTA，依然会返回GET方法的值，即,可以任意替换GET方法为其它值，但仍能有效工作，但如果waf严格按照GET方法取值，则取不到任何内容。
-</code></pre></li>
-<li><strong>php+apache畸形的boundary</strong><pre><code>php在解析multipart data的时候有自己的特性，对于boundary的识别，只取了逗号前面的内容，例如我们设置的boundary为----aaaa,123456，php解析的时候只识别了----aaaa,后面的内容均没有识别。然而其他的如WAF在做解析的时候，有可能获取的是整个字符串，此时可能就会出现BYPASS。
-</code></pre></li>
+<li><strong>畸形method(header头中)</strong><br>某些apache版本在做GET请求的时候，无论method为何值均会取出GET的内容。如请求的method名为DOTA，依然会返回GET方法的值，即,可以任意替换GET方法为其它值，但仍能有效工作，但如果waf严格按照GET方法取值，则取不到任何内容。</li>
+<li><strong>php+apache畸形的boundary</strong><br>php在解析multipart data的时候有自己的特性，对于boundary的识别，只取了逗号前面的内容，例如我们设置的boundary为—-aaaa,123456，php解析的时候只识别了—-aaaa,后面的内容均没有识别。然而其他的如WAF在做解析的时候，有可能获取的是整个字符串，此时可能就会出现BYPASS。</li>
 </ul>
 <h4 id="三、Web应用层"><a href="#三、Web应用层" class="headerlink" title="三、Web应用层"></a>三、Web应用层</h4><ul>
 <li><strong>双重URL编码:</strong> 即web应用层在接受到经过服务器层解码后的参数后，又进行了一次URL解码。</li>
@@ -430,7 +427,7 @@ post form-data内容处
     <link href="http://goodwaf.com/2016/10/20/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     <id>http://goodwaf.com/2016/10/20/PHP代码审计学习笔记/</id>
     <published>2016-10-20T08:06:59.000Z</published>
-    <updated>2016-12-27T08:50:59.846Z</updated>
+    <updated>2016-12-27T08:56:13.730Z</updated>
     
     <content type="html"><![CDATA[<h4 id="一、GPC"><a href="#一、GPC" class="headerlink" title="一、GPC"></a>一、GPC</h4><ol>
 <li>整数类型不受GPC影响</li>
