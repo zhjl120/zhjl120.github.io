@@ -55,11 +55,7 @@
 <li><p><strong>UTF-8</strong></p>
 <ul>
 <li><strong>定义</strong>：  UTF即UCS Transfer Format（Unicode传输格式），utf-8是在网络上传输Unicode字符的一项标准，它是Unicode的主要实现方式之一。它每次传输8位数据，但它并不是直接对应Unicode的字节的值，而是为了传输的可靠性制定了一套从Unicode到utf-8的转换规则。</li>
-<li><strong>转换规则</strong>：<pre><code>Unicode             UTF-8
-0000 - 007F     0xxxxxxx
-0080 - 07FF        110xxxxx 10xxxxxx
-</code></pre> 0800 - FFFF     1110xxxx 10xxxxxx 10xxxxxx</li>
-<li><strong>举例</strong>： ‘汉’字的Unicode编码是：6C49，通过上表可以得出，它在0x0800到0xffff之间，所以它需要使用3个字节来传输，将6C49转位二进制： 0110 1100 0100 1001，按照utf-8的格式转换，第一个字节为：[1110]0110，第二个字节为:[10]110001，第三个字节为：[10]001001，所以将‘汉’字的unicode转换为utf-8之后的二进制是：11100110 10110001 10001001 ，即16进制E6 B1 89</li>
+<li><strong>转换规则</strong>：<br>| Unicode       | UTF-8<br>| 0000 - 007F   | 0xxxxxxx<br>| 0080 - 07FF   | 110xxxxx 10xxxxxx<br>| 0800 - FFFF   | 1110xxxx 10xxxxxx 10xxxxxx<br> <strong>举例</strong>： ‘汉’字的Unicode编码是：6C49，通过上表可以得出，它在0x0800到0xffff之间，所以它需要使用3个字节来传输，将6C49转位二进制： 0110 1100 0100 1001，按照utf-8的格式转换，第一个字节为：[1110]0110，第二个字节为:[10]110001，第三个字节为：[10]001001，所以将‘汉’字的unicode转换为utf-8之后的二进制是：11100110 10110001 10001001 ，即16进制E6 B1 89</li>
 </ul>
 </li>
 <li><p><strong>单字节</strong>： 由一个字节构成一个字符的编码。如ASCII</p>
@@ -67,7 +63,7 @@
 <li><strong>多字节</strong>： 由一个或多个字节构成一个字符的编码。如GB2312、GBK</li>
 <li><strong>宽字节</strong>： 始终由两个字节构成一个字符的编码。如Unicode</li>
 </ul>
-</div></article></div></main><footer><div class="paginator"><a href="/2016/11/30/DedeCMS-CheckSql函数绕过/" class="prev">上一篇</a><a href="/2016/10/25/Bypass-WAF-Cookbook/" class="next">下一篇</a></div><div data-thread-key="2016/10/27/字符编码学习笔记/" data-title="字符编码学习笔记" data-url="http://goodwaf.com/2016/10/27/字符编码学习笔记/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"seansun"};
+</div></article></div></main><footer><div class="paginator"><a href="/2016/11/30/DedeCMS-CheckSql函数绕过/" class="prev">PREV</a><a href="/2016/10/25/Bypass-WAF-Cookbook/" class="next">NEXT</a></div><div data-thread-key="2016/10/27/字符编码学习笔记/" data-title="字符编码学习笔记" data-url="http://goodwaf.com/2016/10/27/字符编码学习笔记/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"seansun"};
 (function() {
     var ds = document.createElement('script');
     ds.type = 'text/javascript';ds.async = true;

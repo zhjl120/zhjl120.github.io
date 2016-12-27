@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://goodwaf.com/2016/10/25/Bypass-WAF-Cookbook/</loc>
+    <loc>http://goodwaf.com/2016/10/20/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
     
-    <lastmod>2016-12-27T08:58:48.862Z</lastmod>
+    <lastmod>2016-12-27T09:21:17.622Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://goodwaf.com/2016/10/20/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
+    <loc>http://goodwaf.com/2016/10/27/%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
     
-    <lastmod>2016-12-27T08:56:13.730Z</lastmod>
+    <lastmod>2016-12-27T09:16:14.450Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://goodwaf.com/2016/10/25/Bypass-WAF-Cookbook/</loc>
+    
+    <lastmod>2016-12-27T09:06:50.602Z</lastmod>
     
   </url>
   
@@ -26,13 +33,6 @@
     <loc>http://goodwaf.com/2016/10/19/SQL%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
     
     <lastmod>2016-12-27T08:39:34.071Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://goodwaf.com/2016/10/27/%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
-    
-    <lastmod>2016-12-27T08:33:38.423Z</lastmod>
     
   </url>
   
