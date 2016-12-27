@@ -47,9 +47,10 @@
     <link href="http://goodwaf.com/2016/11/30/DedeCMS-CheckSql%E5%87%BD%E6%95%B0%E7%BB%95%E8%BF%87/"/>
     <id>http://goodwaf.com/2016/11/30/DedeCMS-CheckSql函数绕过/</id>
     <published>2016-11-30T08:12:20.000Z</published>
-    <updated>2016-12-27T08:16:27.331Z</updated>
+    <updated>2016-12-27T08:22:38.063Z</updated>
     
-    <content type="html"><![CDATA[<p>DedeCMS自带了一个函数来检查SQL语句以防止注入，该函数是由80sec提供的通用SQL过滤函数。很多其它程序也使用了该函数，最近就碰到一个。但是由于该函数的设计缺陷导致其可以被绕过。代码如下:</p>
+    <content type="html"><![CDATA[<p>DedeCMS自带了一个函数来检查SQL语句以防止注入，该函数是由80sec提供的通用SQL过滤函数。很多其它程序也使用了该函数，最近就碰到一个。但是由于该函数的设计缺陷导致其可以被绕过。代码如下:<br><a id="more"></a></p>
+<p>DedeCMS自带了一个函数来检查SQL语句以防止注入，该函数是由80sec提供的通用SQL过滤函数。很多其它程序也使用了该函数，最近就碰到一个。但是由于该函数的设计缺陷导致其可以被绕过。代码如下:</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//SQL语句过滤程序，由80sec提供，这里作了适当的修改</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">CheckSql</span><span class="params">($db_string,$querytype=<span class="string">'select'</span>)</span></span></div><div class="line">&#123;</div><div class="line">	$clean = <span class="string">''</span>;</div><div class="line">	$error=<span class="string">''</span>;</div><div class="line">	$old_pos = <span class="number">0</span>;</div><div class="line">	$pos = <span class="number">-1</span>;</div><div class="line"></div><div class="line">	<span class="comment">//如果是普通查询语句，直接过滤一些特殊语法</span></div><div class="line">	<span class="keyword">if</span>($querytype==<span class="string">'select'</span>)</div><div class="line">	&#123;</div><div class="line">		$notallow1 = <span class="string">"[^0-9a-z@\._-]&#123;1,&#125;(union|sleep|benchmark|load_file|outfile)[^0-9a-z@\.-]&#123;1,&#125;"</span>;</div><div class="line"></div><div class="line">		<span class="comment">//$notallow2 = "--|/\*";</span></div><div class="line">		<span class="keyword">if</span>(m_eregi($notallow1,$db_string))</div><div class="line">		&#123;</div><div class="line">			fputs(fopen($log_file,<span class="string">'a+'</span>),<span class="string">"$userIP||$getUrl||$db_string||SelectBreak\r\n"</span>);</div><div class="line">			<span class="keyword">exit</span>(<span class="string">"&lt;font size='5' color='red'&gt;Safe Alert: Request Error step 1 !&lt;/font&gt;"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">//完整的SQL检查</span></div><div class="line">	<span class="keyword">while</span> (<span class="keyword">true</span>)</div><div class="line">	&#123;</div><div class="line">		$pos = strpos($db_string, <span class="string">'\''</span>, $pos + <span class="number">1</span>);</div><div class="line">		<span class="keyword">if</span> ($pos === <span class="keyword">false</span>)</div><div class="line">		&#123;</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">		$clean .= substr($db_string, $old_pos, $pos - $old_pos);</div><div class="line">		<span class="keyword">while</span> (<span class="keyword">true</span>)</div><div class="line">		&#123;</div><div class="line">			$pos1 = strpos($db_string, <span class="string">'\''</span>, $pos + <span class="number">1</span>);</div><div class="line">			$pos2 = strpos($db_string, <span class="string">'\\'</span>, $pos + <span class="number">1</span>);</div><div class="line">			<span class="keyword">if</span> ($pos1 === <span class="keyword">false</span>)</div><div class="line">			&#123;</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">elseif</span> ($pos2 == <span class="keyword">false</span> || $pos2 &gt; $pos1)</div><div class="line">			&#123;</div><div class="line">				$pos = $pos1;</div><div class="line">				<span class="keyword">break</span>;</div><div class="line">			&#125;</div><div class="line">			$pos = $pos2 + <span class="number">1</span>;</div><div class="line">		&#125;</div><div class="line">		$clean .= <span class="string">'$s$'</span>;</div><div class="line">		$old_pos = $pos + <span class="number">1</span>;</div><div class="line">	&#125;</div><div class="line">	$clean .= substr($db_string, $old_pos);</div><div class="line">	$clean = trim(strtolower(preg_replace(<span class="keyword">array</span>(<span class="string">'~\s+~s'</span> ), <span class="keyword">array</span>(<span class="string">' '</span>), $clean)));</div><div class="line"></div><div class="line">	<span class="comment">//老版本的Mysql并不支持union，常用的程序里也不使用union，但是一些黑客使用它，所以检查它</span></div><div class="line">	<span class="keyword">if</span> (strpos($clean, <span class="string">'union'</span>) !== <span class="keyword">false</span> &amp;&amp; preg_match(<span class="string">'~(^|[^a-z])union($|[^[a-z])~s'</span>, $clean) != <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		$fail = <span class="keyword">true</span>;</div><div class="line">		$error=<span class="string">"union detect"</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">//发布版本的程序可能比较少包括--,#这样的注释，但是黑客经常使用它们</span></div><div class="line">	<span class="keyword">elseif</span> (strpos($clean, <span class="string">'/*'</span>) &gt; <span class="number">2</span> || strpos($clean, <span class="string">'--'</span>) !== <span class="keyword">false</span> || strpos($clean, <span class="string">'#'</span>) !== <span class="keyword">false</span>)</div><div class="line">	&#123;</div><div class="line">		$fail = <span class="keyword">true</span>;</div><div class="line">		$error=<span class="string">"comment detect"</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">//这些函数不会被使用，但是黑客会用它来操作文件，down掉数据库</span></div><div class="line">	<span class="keyword">elseif</span> (strpos($clean, <span class="string">'sleep'</span>) !== <span class="keyword">false</span> &amp;&amp; preg_match(<span class="string">'~(^|[^a-z])sleep($|[^[a-z])~s'</span>, $clean) != <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		$fail = <span class="keyword">true</span>;</div><div class="line">		$error=<span class="string">"slown down detect"</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">elseif</span> (strpos($clean, <span class="string">'benchmark'</span>) !== <span class="keyword">false</span> &amp;&amp; preg_match(<span class="string">'~(^|[^a-z])benchmark($|[^[a-z])~s'</span>, $clean) != <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		$fail = <span class="keyword">true</span>;</div><div class="line">		$error=<span class="string">"slown down detect"</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">elseif</span> (strpos($clean, <span class="string">'load_file'</span>) !== <span class="keyword">false</span> &amp;&amp; preg_match(<span class="string">'~(^|[^a-z])load_file($|[^[a-z])~s'</span>, $clean) != <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		$fail = <span class="keyword">true</span>;</div><div class="line">		$error=<span class="string">"file fun detect"</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">elseif</span> (strpos($clean, <span class="string">'into outfile'</span>) !== <span class="keyword">false</span> &amp;&amp; preg_match(<span class="string">'~(^|[^a-z])into\s+outfile($|[^[a-z])~s'</span>, $clean) != <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		$fail = <span class="keyword">true</span>;</div><div class="line">		$error=<span class="string">"file fun detect"</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">//老版本的MYSQL不支持子查询，我们的程序里可能也用得少，但是黑客可以使用它来查询数据库敏感信息</span></div><div class="line">	<span class="keyword">elseif</span> (preg_match(<span class="string">'~\([^)]*?select~s'</span>, $clean) != <span class="number">0</span>)</div><div class="line">	&#123;</div><div class="line">		$fail = <span class="keyword">true</span>;</div><div class="line">		$error=<span class="string">"sub select detect"</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> (!<span class="keyword">empty</span>($fail))</div><div class="line">	&#123;</div><div class="line">		fputs(fopen($log_file,<span class="string">'a+'</span>),<span class="string">"$userIP||$getUrl||$db_string||$error\r\n"</span>);</div><div class="line">		<span class="keyword">exit</span>(<span class="string">"&lt;font size='5' color='red'&gt;Safe Alert: Request Error step 2!&lt;/font&gt;"</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span></div><div class="line">	&#123;</div><div class="line">		<span class="keyword">return</span> $db_string;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>函数中过滤了union、select、sleep、into outfile以及注释符等在SQL注入时经常使用的关键字，不得不佩服这些专业团队写的规则，的确比很多WAF都要严格。但是由于其在开始处对SQL语句进行了替换操作导致该函数还是可以被绕过。关键的地方在于while(true)循环，该循环大致做的事就是将单引号中的代码替换为: $s$<br>例如如下语句：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> username = <span class="string">'Bob'</span></div></pre></td></tr></table></figure></p>
 <p>通过该while循环后将会被替换为<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> username = $s$</div></pre></td></tr></table></figure></p>
@@ -63,8 +64,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;DedeCMS自带了一个函数来检查SQL语句以防止注入，该函数是由80sec提供的通用SQL过滤函数。很多其它程序也使用了该函数，最近就碰到一个。但是由于该函数的设计缺陷导致其可以被绕过。代码如下:&lt;/p&gt;
-&lt;figure class=&quot;highlight php&quot;&gt;&lt;ta
+      &lt;p&gt;DedeCMS自带了一个函数来检查SQL语句以防止注入，该函数是由80sec提供的通用SQL过滤函数。很多其它程序也使用了该函数，最近就碰到一个。但是由于该函数的设计缺陷导致其可以被绕过。代码如下:&lt;br&gt;
     
     </summary>
     
@@ -76,9 +76,21 @@
     <link href="http://goodwaf.com/2016/10/27/%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     <id>http://goodwaf.com/2016/10/27/字符编码学习笔记/</id>
     <published>2016-10-27T08:11:42.000Z</published>
-    <updated>2016-12-27T08:16:07.979Z</updated>
+    <updated>2016-12-27T08:23:15.535Z</updated>
     
     <content type="html"><![CDATA[<ul>
+<li><p><strong>ACSII</strong> </p>
+<ul>
+<li><strong>规定</strong>：一个字符由一个字节存储。</li>
+<li><strong>范围</strong>：<ul>
+<li>前32位（0x00 — 0x20）为控制码。</li>
+<li>第32位至127位（0x20 — 0x7f）为空格、标点符号、数字、字母。</li>
+<li>127位以后不用。<a id="more"></a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li><p><strong>ACSII</strong> </p>
 <ul>
 <li><strong>规定</strong>：一个字符由一个字节存储。</li>
@@ -154,7 +166,9 @@
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;规定&lt;/strong&gt;：一个字符由一个字节存储。&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;范围&lt;/strong&gt;：&lt;ul&gt;
-&lt;li&gt;前32位（0x00 — 0x20）为控制
+&lt;li&gt;前32位（0x00 — 0x20）为控制码。&lt;/li&gt;
+&lt;li&gt;第32位至127位（0x20 — 0x7f）为空格、标点符号、数字、字母。&lt;/li&gt;
+&lt;li&gt;127位以后不用。
     
     </summary>
     
@@ -166,9 +180,10 @@
     <link href="http://goodwaf.com/2016/10/25/Bypass-WAF-Cookbook/"/>
     <id>http://goodwaf.com/2016/10/25/Bypass-WAF-Cookbook/</id>
     <published>2016-10-25T08:10:04.000Z</published>
-    <updated>2016-12-27T08:15:54.195Z</updated>
+    <updated>2016-12-27T08:22:57.203Z</updated>
     
-    <content type="html"><![CDATA[<h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>本文整理自wooyun drops上的几篇文章以及自己fuzz出来的一些特征，wooyun文章以《Bypass WAF Cookbook》内容为主体，作者为MayIKissYou，本文是精简过后的内容，主要用于自己平时查询。更详细的内容请参考原文。</p>
+    <content type="html"><![CDATA[<h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>本文整理自wooyun drops上的几篇文章以及自己fuzz出来的一些特征，wooyun文章以《Bypass WAF Cookbook》内容为主体，作者为MayIKissYou，本文是精简过后的内容，主要用于自己平时查询。更详细的内容请参考原文。<br><a id="more"></a></p>
+<h3 id="一、前言-1"><a href="#一、前言-1" class="headerlink" title="一、前言"></a>一、前言</h3><p>本文整理自wooyun drops上的几篇文章以及自己fuzz出来的一些特征，wooyun文章以《Bypass WAF Cookbook》内容为主体，作者为MayIKissYou，本文是精简过后的内容，主要用于自己平时查询。更详细的内容请参考原文。</p>
 <p>一点感悟，所谓bypass的核心就是：寻找用户数据从用户端到最终数据处理端的中间不同节点对数据转换的特性。因为不同节点对数据会有不同的处理方式，而利用这些不同的特性即可以造成bypass，例如数据从客户端发出后，会经过WAF引擎、Web服务器、脚本语言解析器、Web应用程序、数据库，而这里面无论哪一层发现新的特性，都有可能绕过WAF，更多的实例在下文中举出。</p>
 <h3 id="二、Web-Server层"><a href="#二、Web-Server层" class="headerlink" title="二、Web Server层"></a>二、Web Server层</h3><h4 id="1-IIS服务器"><a href="#1-IIS服务器" class="headerlink" title="1. IIS服务器"></a>1. IIS服务器</h4><ul>
 <li>iis环境:<ul>
@@ -281,7 +296,7 @@ post form-data内容处
     
     <summary type="html">
     
-      &lt;h3 id=&quot;一、前言&quot;&gt;&lt;a href=&quot;#一、前言&quot; class=&quot;headerlink&quot; title=&quot;一、前言&quot;&gt;&lt;/a&gt;一、前言&lt;/h3&gt;&lt;p&gt;本文整理自wooyun drops上的几篇文章以及自己fuzz出来的一些特征，wooyun文章以《Bypass WAF Co
+      &lt;h3 id=&quot;一、前言&quot;&gt;&lt;a href=&quot;#一、前言&quot; class=&quot;headerlink&quot; title=&quot;一、前言&quot;&gt;&lt;/a&gt;一、前言&lt;/h3&gt;&lt;p&gt;本文整理自wooyun drops上的几篇文章以及自己fuzz出来的一些特征，wooyun文章以《Bypass WAF Cookbook》内容为主体，作者为MayIKissYou，本文是精简过后的内容，主要用于自己平时查询。更详细的内容请参考原文。&lt;br&gt;
     
     </summary>
     
@@ -293,9 +308,19 @@ post form-data内容处
     <link href="http://goodwaf.com/2016/10/23/Web%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E6%80%9D%E8%B7%AF%E6%95%B4%E7%90%86/"/>
     <id>http://goodwaf.com/2016/10/23/Web渗透测试思路整理/</id>
     <published>2016-10-23T08:08:32.000Z</published>
-    <updated>2016-12-27T08:15:39.847Z</updated>
+    <updated>2016-12-27T08:22:18.683Z</updated>
     
     <content type="html"><![CDATA[<h4 id="信息收集："><a href="#信息收集：" class="headerlink" title="信息收集："></a>信息收集：</h4><ul>
+<li>域名/IP<ul>
+<li>子域名列表</li>
+<li>whois: 注册地址，注册人，联系方式等</li>
+<li>whois反查： 同ip有哪些站点(旁注)，同一个注册人注册了哪些域名</li>
+<li>社工注册人信息<a id="more"></a>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="信息收集：-1"><a href="#信息收集：-1" class="headerlink" title="信息收集："></a>信息收集：</h4><ul>
 <li><p>域名/IP</p>
 <ul>
 <li>子域名列表</li>
@@ -413,10 +438,11 @@ post form-data内容处
     <summary type="html">
     
       &lt;h4 id=&quot;信息收集：&quot;&gt;&lt;a href=&quot;#信息收集：&quot; class=&quot;headerlink&quot; title=&quot;信息收集：&quot;&gt;&lt;/a&gt;信息收集：&lt;/h4&gt;&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;域名/IP&lt;/p&gt;
-&lt;ul&gt;
+&lt;li&gt;域名/IP&lt;ul&gt;
 &lt;li&gt;子域名列表&lt;/li&gt;
-&lt;li&gt;whois: 注册地址，注册人
+&lt;li&gt;whois: 注册地址，注册人，联系方式等&lt;/li&gt;
+&lt;li&gt;whois反查： 同ip有哪些站点(旁注)，同一个注册人注册了哪些域名&lt;/li&gt;
+&lt;li&gt;社工注册人信息
     
     </summary>
     
@@ -428,9 +454,20 @@ post form-data内容处
     <link href="http://goodwaf.com/2016/10/20/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     <id>http://goodwaf.com/2016/10/20/PHP代码审计学习笔记/</id>
     <published>2016-10-20T08:06:59.000Z</published>
-    <updated>2016-12-27T08:15:25.127Z</updated>
+    <updated>2016-12-27T08:21:54.907Z</updated>
     
     <content type="html"><![CDATA[<h4 id="一、GPC"><a href="#一、GPC" class="headerlink" title="一、GPC"></a>一、GPC</h4><ol>
+<li>整数类型不受GPC影响</li>
+<li>$_SERVER变量不受GPC保护</li>
+<li>$_FILES变量不受GPC保护</li>
+<li>宽字节注入</li>
+<li>数据库操作容易忘记添加单引号的地方如：in()/limit/order by/group by</li>
+<li>只过滤了变量的值，但没有过滤key(有的程序会在代码中使用key，如带入SQL语句)</li>
+<li>GPC为on的时候，在php4和php&lt;5.2.1的情况下GPC不处理数组第一维变量的key</li>
+<li>在对参数进行过滤后又对其进行了其它的操作，如substr，str_replace等，这可能导致转义符被删除<a id="more"></a>
+</li>
+</ol>
+<h4 id="一、GPC-1"><a href="#一、GPC-1" class="headerlink" title="一、GPC"></a>一、GPC</h4><ol>
 <li>整数类型不受GPC影响</li>
 <li>$_SERVER变量不受GPC保护</li>
 <li>$_FILES变量不受GPC保护</li>
@@ -609,7 +646,12 @@ post form-data内容处
       &lt;h4 id=&quot;一、GPC&quot;&gt;&lt;a href=&quot;#一、GPC&quot; class=&quot;headerlink&quot; title=&quot;一、GPC&quot;&gt;&lt;/a&gt;一、GPC&lt;/h4&gt;&lt;ol&gt;
 &lt;li&gt;整数类型不受GPC影响&lt;/li&gt;
 &lt;li&gt;$_SERVER变量不受GPC保护&lt;/li&gt;
-&lt;li&gt;$_FI
+&lt;li&gt;$_FILES变量不受GPC保护&lt;/li&gt;
+&lt;li&gt;宽字节注入&lt;/li&gt;
+&lt;li&gt;数据库操作容易忘记添加单引号的地方如：in()/limit/order by/group by&lt;/li&gt;
+&lt;li&gt;只过滤了变量的值，但没有过滤key(有的程序会在代码中使用key，如带入SQL语句)&lt;/li&gt;
+&lt;li&gt;GPC为on的时候，在php4和php&amp;lt;5.2.1的情况下GPC不处理数组第一维变量的key&lt;/li&gt;
+&lt;li&gt;在对参数进行过滤后又对其进行了其它的操作，如substr，str_replace等，这可能导致转义符被删除
     
     </summary>
     
