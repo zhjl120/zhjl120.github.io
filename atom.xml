@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>山雨</title>
-  <subtitle>欲来风满楼</subtitle>
+  <title>WangEX`s Blog</title>
+  
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://goodwaf.com/"/>
@@ -9,7 +9,7 @@
   <id>http://goodwaf.com/</id>
   
   <author>
-    <name>山雨</name>
+    <name>wangex</name>
     
   </author>
   
