@@ -416,7 +416,7 @@ post form-data内容处
     <link href="http://goodwaf.com/2016/10/20/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     <id>http://goodwaf.com/2016/10/20/PHP代码审计学习笔记/</id>
     <published>2016-10-20T08:06:59.000Z</published>
-    <updated>2016-12-27T08:42:39.971Z</updated>
+    <updated>2016-12-27T08:48:59.550Z</updated>
     
     <content type="html"><![CDATA[<h4 id="一、GPC"><a href="#一、GPC" class="headerlink" title="一、GPC"></a>一、GPC</h4><ol>
 <li>整数类型不受GPC影响</li>
@@ -476,15 +476,17 @@ post form-data内容处
 </table>
 <h4 id="三、危险函数"><a href="#三、危险函数" class="headerlink" title="三、危险函数"></a>三、危险函数</h4><hr>
 <ul>
-<li><strong>代码执行</strong><pre><code>1.  eval
-2.  preg_replace
-3.  assert
-4.  call_user_func
-5.  call_user_func_array
-6.  create_function
-7.  array_map
-</code></pre></li>
+<li><strong>代码执行</strong></li>
 </ul>
+<ol>
+<li>eval</li>
+<li>preg_replace</li>
+<li>assert</li>
+<li>call_user_func</li>
+<li>call_user_func_array</li>
+<li>create_function</li>
+<li>array_map</li>
+</ol>
 <hr>
 <ul>
 <li><strong>文件包含</strong><pre><code>1.  include
