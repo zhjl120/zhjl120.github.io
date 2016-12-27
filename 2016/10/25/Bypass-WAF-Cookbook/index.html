@@ -1,7 +1,7 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Bypass WAF Cookbook · WangEX`s Blog</title><meta name="description" content="Bypass WAF Cookbook - wangex"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.jpg"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://goodwaf.com/atom.xml" title="WangEX`s Blog"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.jpg" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://github.com/zhjl120" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">Bypass WAF Cookbook</h1><div class="post-info">2016年10月25日</div><div class="post-content"><h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>本文整理自wooyun drops上的几篇文章以及自己fuzz出来的一些特征，wooyun文章以《Bypass WAF Cookbook》内容为主体，作者为MayIKissYou，本文是精简过后的内容，主要用于自己平时查询。更详细的内容请参考原文。</p>
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Bypass WAF Cookbook · WangEX`s Blog</title><meta name="description" content="Bypass WAF Cookbook - wangex"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.jpg"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://goodwaf.com/atom.xml" title="WangEX`s Blog"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.jpg" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://github.com/zhjl120" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">Bypass WAF Cookbook</h1><div class="post-info">2016年10月25日</div><div class="post-content"><h4 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h4><p>本文整理自wooyun drops上的几篇文章以及自己fuzz出来的一些特征，wooyun文章以《Bypass WAF Cookbook》内容为主体，作者为MayIKissYou，本文是精简过后的内容，主要用于自己平时查询。更详细的内容请参考原文。</p>
 <a id="more"></a>
 <p>一点感悟，所谓bypass的核心就是：寻找用户数据从用户端到最终数据处理端的中间不同节点对数据转换的特性。因为不同节点对数据会有不同的处理方式，而利用这些不同的特性即可以造成bypass，例如数据从客户端发出后，会经过WAF引擎、Web服务器、脚本语言解析器、Web应用程序、数据库，而这里面无论哪一层发现新的特性，都有可能绕过WAF，更多的实例在下文中举出。</p>
-<h3 id="二、Web-Server层"><a href="#二、Web-Server层" class="headerlink" title="二、Web Server层"></a>二、Web Server层</h3><h4 id="1-IIS服务器"><a href="#1-IIS服务器" class="headerlink" title="1. IIS服务器"></a>1. IIS服务器</h4><ul>
+<h4 id="二、Web-Server层"><a href="#二、Web-Server层" class="headerlink" title="二、Web Server层"></a>二、Web Server层</h4><h5 id="1-IIS服务器"><a href="#1-IIS服务器" class="headerlink" title="1. IIS服务器"></a>1. IIS服务器</h5><ul>
 <li>iis环境:<ul>
 <li><strong>%u特性</strong>: iis支持对unicode的解析，如:payload为[s%u006c%u0006ect],解析出来后则是[select]</li>
 </ul>
@@ -13,13 +13,13 @@
 </ul>
 </li>
 </ul>
-<h4 id="2-apache服务器"><a href="#2-apache服务器" class="headerlink" title="2. apache服务器"></a>2. apache服务器</h4><ul>
+<h5 id="2-apache服务器"><a href="#2-apache服务器" class="headerlink" title="2. apache服务器"></a>2. apache服务器</h5><ul>
 <li><strong>畸形method(header头中)</strong> <pre><code>某些apache版本在做GET请求的时候，无论method为何值均会取出GET的内容。如请求的method名为DOTA，依然会返回GET方法的值，即,可以任意替换GET方法为其它值，但仍能有效工作，但如果waf严格按照GET方法取值，则取不到任何内容。
 </code></pre></li>
 <li><strong>php+apache畸形的boundary</strong><pre><code>php在解析multipart data的时候有自己的特性，对于boundary的识别，只取了逗号前面的内容，例如我们设置的boundary为----aaaa,123456，php解析的时候只识别了----aaaa,后面的内容均没有识别。然而其他的如WAF在做解析的时候，有可能获取的是整个字符串，此时可能就会出现BYPASS。
 </code></pre></li>
 </ul>
-<h3 id="三、Web应用层"><a href="#三、Web应用层" class="headerlink" title="三、Web应用层"></a>三、Web应用层</h3><ul>
+<h4 id="三、Web应用层"><a href="#三、Web应用层" class="headerlink" title="三、Web应用层"></a>三、Web应用层</h4><ul>
 <li><strong>双重URL编码:</strong> 即web应用层在接受到经过服务器层解码后的参数后，又进行了一次URL解码。</li>
 <li><strong>获取参数的方式</strong><ul>
 <li>变换请求方式：<ul>
@@ -36,7 +36,7 @@
 </ul>
 </li>
 </ul>
-<h3 id="四、数据库层-MySQL"><a href="#四、数据库层-MySQL" class="headerlink" title="四、数据库层(MySQL)"></a>四、数据库层(MySQL)</h3><ul>
+<h4 id="四、数据库层-MySQL"><a href="#四、数据库层-MySQL" class="headerlink" title="四、数据库层(MySQL)"></a>四、数据库层(MySQL)</h4><ul>
 <li><strong>1. 参数和union之间:</strong><ul>
 <li>\N         ==&gt; select <em> from user where id =1\Nunion select </em> from other</li>
 <li>浮点数  ==&gt; select <em> from user where id =1.0union select </em> from other</li>
@@ -93,7 +93,7 @@
 </ul>
 </li>
 </ul>
-<h3 id="五、WAF层"><a href="#五、WAF层" class="headerlink" title="五、WAF层"></a>五、WAF层</h3><ul>
+<h4 id="五、WAF层"><a href="#五、WAF层" class="headerlink" title="五、WAF层"></a>五、WAF层</h4><ul>
 <li><strong>1. 性能</strong>：某些waf为了照顾性能，会将数据包截取一定长度用来检测，但如果发送的请求包数据长度超过waf规定的长度，则不对之后的内容进行检测</li>
 <li><strong>2.业务</strong>：某些waf为了规避业务上的问题会刻意留下漏洞(属于业务和技术的平衡点的问题,值得挖掘)</li>
 <li><strong>3. FUZZ</strong>：某些waf可能由于自身的解析问题，对于某些字符解析出错，造成全局bypass<ul>
