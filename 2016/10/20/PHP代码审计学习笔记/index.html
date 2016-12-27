@@ -7,7 +7,7 @@
 <li>只过滤了变量的值，但没有过滤key(有的程序会在代码中使用key，如带入SQL语句)<a id="more"></a></li>
 <li>GPC为on的时候，在php4和php&lt;5.2.1的情况下GPC不处理数组第一维变量的key</li>
 <li>在对参数进行过滤后又对其进行了其它的操作，如substr，str_replace等，这可能导致转义符被删除</li>
-<li>php5.3以后$_REQUEST中不再包含$_COOKIE</li>
+<li>php5.3以后$_REQUEST中不再包含$_COOKIE(可能导致过滤不全)</li>
 </ol>
 <h4 id="二、特性"><a href="#二、特性" class="headerlink" title="二、特性"></a>二、特性</h4><table>
 <thead>
