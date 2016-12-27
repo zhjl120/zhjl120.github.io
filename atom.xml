@@ -416,16 +416,15 @@ post form-data内容处
     <link href="http://goodwaf.com/2016/10/20/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     <id>http://goodwaf.com/2016/10/20/PHP代码审计学习笔记/</id>
     <published>2016-10-20T08:06:59.000Z</published>
-    <updated>2016-12-27T08:32:44.695Z</updated>
+    <updated>2016-12-27T08:34:45.899Z</updated>
     
-    <content type="html"><![CDATA[<a id="more"></a>
-<h4 id="一、GPC"><a href="#一、GPC" class="headerlink" title="一、GPC"></a>一、GPC</h4><ol>
+    <content type="html"><![CDATA[<h4 id="一、GPC"><a href="#一、GPC" class="headerlink" title="一、GPC"></a>一、GPC</h4><ol>
 <li>整数类型不受GPC影响</li>
 <li>$_SERVER变量不受GPC保护</li>
 <li>$_FILES变量不受GPC保护</li>
 <li>宽字节注入</li>
 <li>数据库操作容易忘记添加单引号的地方如：in()/limit/order by/group by</li>
-<li>只过滤了变量的值，但没有过滤key(有的程序会在代码中使用key，如带入SQL语句)<!-- more  --></li>
+<li>只过滤了变量的值，但没有过滤key(有的程序会在代码中使用key，如带入SQL语句)<a id="more"></a></li>
 <li>GPC为on的时候，在php4和php&lt;5.2.1的情况下GPC不处理数组第一维变量的key</li>
 <li>在对参数进行过滤后又对其进行了其它的操作，如substr，str_replace等，这可能导致转义符被删除</li>
 </ol>
@@ -595,10 +594,13 @@ post form-data内容处
     
     <summary type="html">
     
-      &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;h4 id=&quot;一、GPC&quot;&gt;&lt;a href=&quot;#一、GPC&quot; class=&quot;headerlink&quot; title=&quot;一、GPC&quot;&gt;&lt;/a&gt;一、GPC&lt;/h4&gt;&lt;ol&gt;
+      &lt;h4 id=&quot;一、GPC&quot;&gt;&lt;a href=&quot;#一、GPC&quot; class=&quot;headerlink&quot; title=&quot;一、GPC&quot;&gt;&lt;/a&gt;一、GPC&lt;/h4&gt;&lt;ol&gt;
 &lt;li&gt;整数类型不受GPC影响&lt;/li&gt;
-&lt;li&gt;$_SERVER变量不受G
+&lt;li&gt;$_SERVER变量不受GPC保护&lt;/li&gt;
+&lt;li&gt;$_FILES变量不受GPC保护&lt;/li&gt;
+&lt;li&gt;宽字节注入&lt;/li&gt;
+&lt;li&gt;数据库操作容易忘记添加单引号的地方如：in()/limit/order by/group by&lt;/li&gt;
+&lt;li&gt;只过滤了变量的值，但没有过滤key(有的程序会在代码中使用key，如带入SQL语句)
     
     </summary>
     
