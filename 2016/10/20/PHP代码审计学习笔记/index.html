@@ -1,19 +1,11 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> PHP代码审计学习笔记 · WangEX`s Blog</title><meta name="description" content="PHP代码审计学习笔记 - wangex"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.jpg"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://goodwaf.com/atom.xml" title="WangEX`s Blog"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.jpg" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://github.com/zhjl120" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">PHP代码审计学习笔记</h1><div class="post-info">2016年10月20日</div><div class="post-content"><ol>
-<li>整数类型不受GPC影响</li>
-<li>$_SERVER变量不受GPC保护</li>
-<li>$_FILES变量不受GPC保护</li>
-<li>宽字节注入</li>
-<li>数据库操作容易忘记添加单引号的地方如：in()/limit/order by/group by</li>
-<li>只过滤了变量的值，但没有过滤key(有的程序会在代码中使用key，如带入SQL语句)<a id="more"></a>
-</li>
-</ol>
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> PHP代码审计学习笔记 · WangEX`s Blog</title><meta name="description" content="PHP代码审计学习笔记 - wangex"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.jpg"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://goodwaf.com/atom.xml" title="WangEX`s Blog"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.jpg" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://github.com/zhjl120" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">PHP代码审计学习笔记</h1><div class="post-info">2016年10月20日</div><div class="post-content"><a id="more"></a>
 <h4 id="一、GPC"><a href="#一、GPC" class="headerlink" title="一、GPC"></a>一、GPC</h4><ol>
 <li>整数类型不受GPC影响</li>
 <li>$_SERVER变量不受GPC保护</li>
 <li>$_FILES变量不受GPC保护</li>
 <li>宽字节注入</li>
 <li>数据库操作容易忘记添加单引号的地方如：in()/limit/order by/group by</li>
-<li>只过滤了变量的值，但没有过滤key(有的程序会在代码中使用key，如带入SQL语句)</li>
+<li>只过滤了变量的值，但没有过滤key(有的程序会在代码中使用key，如带入SQL语句)<!-- more  --></li>
 <li>GPC为on的时候，在php4和php&lt;5.2.1的情况下GPC不处理数组第一维变量的key</li>
 <li>在对参数进行过滤后又对其进行了其它的操作，如substr，str_replace等，这可能导致转义符被删除</li>
 </ol>

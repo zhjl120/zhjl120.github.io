@@ -1,15 +1,4 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> SQL注入学习笔记 · WangEX`s Blog</title><meta name="description" content="SQL注入学习笔记 - wangex"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.jpg"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://goodwaf.com/atom.xml" title="WangEX`s Blog"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.jpg" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://github.com/zhjl120" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">SQL注入学习笔记</h1><div class="post-info">2016年10月19日</div><div class="post-content"><ul>
-<li><strong>联合查询型</strong></li>
-<li><strong>报错型</strong></li>
-<li><strong>盲注型</strong><ul>
-<li><strong>布尔型盲注</strong></li>
-<li><strong>延时型盲注</strong></li>
-</ul>
-</li>
-<li><strong>多语句查询型</strong><a id="more"></a>
-</li>
-</ul>
-<h3 id="一、SQL注入分类"><a href="#一、SQL注入分类" class="headerlink" title="一、SQL注入分类"></a>一、SQL注入分类</h3><ul>
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> SQL注入学习笔记 · WangEX`s Blog</title><meta name="description" content="SQL注入学习笔记 - wangex"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.jpg"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://goodwaf.com/atom.xml" title="WangEX`s Blog"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.jpg" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="https://github.com/zhjl120" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">SQL注入学习笔记</h1><div class="post-info">2016年10月19日</div><div class="post-content"><h3 id="一、SQL注入分类"><a href="#一、SQL注入分类" class="headerlink" title="一、SQL注入分类"></a>一、SQL注入分类</h3><ul>
 <li><strong>联合查询型</strong></li>
 <li><strong>报错型</strong></li>
 <li><strong>盲注型</strong><ul>
@@ -19,6 +8,7 @@
 </li>
 <li><strong>多语句查询型</strong></li>
 </ul>
+<a id="more"></a>
 <h3 id="二、名词解释"><a href="#二、名词解释" class="headerlink" title="二、名词解释:"></a>二、名词解释:</h3><ul>
 <li><strong>1.联合查询型</strong><br>   即通过将payload嵌入到正常的SQL语句内，在不破坏业务逻辑的情况下，通过SQL语句查询出数据库内容。</li>
 <li><strong>2.报错型</strong><br>   即通过强制数据库报错来提取数据库内容，适用于会抛出SQL错误到页面显示的web应用。</li>
