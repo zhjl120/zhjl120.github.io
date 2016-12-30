@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://goodwaf.com/"/>
-  <updated>2016-12-30T09:14:57.691Z</updated>
+  <updated>2016-12-30T09:20:19.071Z</updated>
   <id>http://goodwaf.com/</id>
   
   <author>
@@ -20,36 +20,34 @@
     <link href="http://goodwaf.com/2016/12/30/%E5%9F%BA%E4%BA%8E%E7%BA%A6%E6%9D%9F%E6%9D%A1%E4%BB%B6%E7%9A%84SQL%E6%94%BB%E5%87%BB/"/>
     <id>http://goodwaf.com/2016/12/30/基于约束条件的SQL攻击/</id>
     <published>2016-12-30T09:13:42.000Z</published>
-    <updated>2016-12-30T09:14:57.691Z</updated>
+    <updated>2016-12-30T09:20:19.071Z</updated>
     
-    <content type="html"><![CDATA[<p>####一、背景<br>今天看了一篇基于约束条件的SQL注入的文章，感觉非常不错，但亲自实践后又发现了很多问题，虽然利用起来有一定要求，不过作者的思想还是很值得学习的。原文中的主旨思想是利用数据库对空格符的特殊处理方式来达到水平越权的目的。以下内容以MySQL为例，其它数据库可能也存在这个问题（文章作者实验了MySQL和SQLite），我也在MySQL上复现了这个问题。</p>
+    <content type="html"><![CDATA[<h4 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h4><p>今天看了一篇基于约束条件的SQL注入的文章，感觉非常不错，但亲自实践后又发现了很多问题，虽然利用起来有一定要求，不过作者的思想还是很值得学习的。原文中的主旨思想是利用数据库对空格符的特殊处理方式来达到水平越权的目的。以下内容以MySQL为例，其它数据库可能也存在这个问题（文章作者实验了MySQL和SQLite），我也在MySQL上复现了这个问题。</p>
 <a id="more"></a>
-<p>####二、知识点</p>
-<p><strong>数据库字符串比较</strong>：在数据库对字符串进行比较时，如果两个字符串的长度不一样，则会将较短的字符串末尾填充空格，使两个字符串的长度一致，比如，字符串A:[String]和字符串B:[String2]进行比较时，由于String2比String多了一个字符串，这时MySQL会将字符串A填充为[String ]，即在原来字符串后面加了一个空格，使两个字符串长度一致。看如下两条查询语句：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">where</span> username=<span class="string">'Dumb'</span></div><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">where</span> username=<span class="string">'Dumb    '</span></div></pre></td></tr></table></figure></p>
+<h4 id="二、知识点"><a href="#二、知识点" class="headerlink" title="二、知识点"></a>二、知识点</h4><p><strong>数据库字符串比较</strong>：在数据库对字符串进行比较时，如果两个字符串的长度不一样，则会将较短的字符串末尾填充空格，使两个字符串的长度一致，比如，字符串A:[String]和字符串B:[String2]进行比较时，由于String2比String多了一个字符串，这时MySQL会将字符串A填充为[String ]，即在原来字符串后面加了一个空格，使两个字符串长度一致。看如下两条查询语句：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">where</span> username=<span class="string">'Dumb'</span></div><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">where</span> username=<span class="string">'Dumb    '</span></div></pre></td></tr></table></figure></p>
 <p>它们的查询结果是一致的，即第二条查询语句中Dumb后面的空格并没有对查询有任何影响。因为在MySQL把查询语句里的username和数据库里的username值进行比较时，它们就是一个字符串的比较，符合上述特征。</p>
 <p><strong>INSERT截断</strong>：这是数据库的另一个特性，当设计一个字段时，我们都必须对其设定一个最大长度，比如CHAR(10)，VARCHAR(20)等等。但是当实际插入数据的长度超过限制时，数据库就会将其进行截断，只保留限定的长度。</p>
-<p>####三、利用场景<br>我们把利用场景设在用户登陆的地方，假如有用户[Dumb]，我们想要使用他的账号登陆，但是我们又不知道他的密码，那么我们可以注册一个名字叫[Dumb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;done]的用户，即在目标用户名的后面加一串空格（注意：空格后需再跟一个或多个任意字符，防止程序在检查用户名是否已存在时匹配到目标用户），空格的长度要超过数据库字段限制的长度，让其强制截断。</p>
+<h4 id="三、利用场景"><a href="#三、利用场景" class="headerlink" title="三、利用场景"></a>三、利用场景</h4><p>我们把利用场景设在用户登陆的地方，假如有用户[Dumb]，我们想要使用他的账号登陆，但是我们又不知道他的密码，那么我们可以注册一个名字叫[Dumb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;done]的用户，即在目标用户名的后面加一串空格（注意：空格后需再跟一个或多个任意字符，防止程序在检查用户名是否已存在时匹配到目标用户），空格的长度要超过数据库字段限制的长度，让其强制截断。</p>
 <p>当我们注册该用户名后，由于截断的问题，此时我们的用户名就为:[Dumb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]，即除了后面的一串空格，我们的用户名和目标用户名一样。</p>
 <p>假如服务端的用户登陆代码为：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$username = mysql_real_escape_string($_GET[<span class="string">'username'</span>]);</div><div class="line">$password = mysql_real_escape_string($_GET[<span class="string">'password'</span>]);</div><div class="line">$query = <span class="string">"SELECT username FROM users</span></div><div class="line">          WHERE username='$username'</div><div class="line">              AND password='$password' ";</div><div class="line">$res = mysql_query($query, $database);</div><div class="line"><span class="keyword">if</span>($res) &#123;</div><div class="line">  <span class="keyword">if</span>(mysql_num_rows($res) &gt; <span class="number">0</span>)&#123;</div><div class="line">      <span class="keyword">return</span> $username;<span class="comment">//此处较原文有改动</span></div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">return</span> <span class="keyword">Null</span>;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure></p>
 <p>从一般SQL注入的角度看，这段代码是不能注入的，但是当我们以目标用户名Dumb和我们自己注册用户的密码进行登陆时就可以绕过认证。当我们以用户名:[Dumb]和密码:[123456]（假设）登陆时，对应的SQL语句就为：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> username <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> username=<span class="string">'Dumb'</span> <span class="keyword">AND</span> <span class="keyword">password</span>=<span class="string">'123456'</span></div></pre></td></tr></table></figure></p>
 <p>当执行这条语句后，数据库将返回我们的自己注册的账户信息，但是注意此处的return $username，虽然此时查询出来的是我们自己的用户信息，但是返回的用户名则是目标的用户名。如果此后的业务逻辑直接以该用户名为准，则我们就达到了水平越权的目的。</p>
-<p>####四、原文中的错误<br>原文中的一段话：</p>
+<h4 id="四、原文中的错误"><a href="#四、原文中的错误" class="headerlink" title="四、原文中的错误"></a>四、原文中的错误</h4><p>原文中的一段话：</p>
 <blockquote>
 <p>很好，如果现在搜索“vampire”的话，将返回两个用户。注意，第二个用户名实际上是“vampire”加上尾部的18个空格。现在，如果使用用户名“vampire”和密码“random_pass”登录的话，则所有搜索该用户名的SELECT查询都将返回第一个数据记录，也就是原始的数据记录。这样的话，攻击者就能够以原始用户身份登录。</p>
 </blockquote>
-<p>这里是有问题的，如果使用用户名“vampire”和密码“random_pass”登录的话，那么返回的只能是我们自己注册的用户信息，而不会返回目标用户信息。SQL查询语句是一个and操作，如果密码不一样怎么会把目标用户的信息也返回回来？</p>
-<p>####五、限制条件</p>
-<ol>
+<p>这里是有问题的，如果使用用户名“vampire”和密码“random_pass”登录的话，那么返回的只能是我们自己注册的用户信息，而不会返回目标用户信息。SQL查询语句是一个and操作，如果密码不一样怎么会把目标用户的信息也返回回来?</p>
+<h4 id="五、限制条件"><a href="#五、限制条件" class="headerlink" title="五、限制条件"></a>五、限制条件</h4><ol>
 <li><strong>服务端没有对用户名长度进行限制</strong>。如果服务端限制了用户名长度就不能导致数据库截断，也就没有利用条件。</li>
 <li><strong>登陆验证的SQL语句必须是用户名和密码一起验证</strong>。如果是验证流程是先根据用户名查找出对应的密码，然后再比对密码的话，那么也不能进行利用。因为当使用Dumb为用户名来查询密码的话，数据库此时就会返回两条记录，而一般取第一条则是目标用户的记录，那么你传输的密码肯定是和目标用户密码匹配不上的。</li>
 <li><strong>验证成功后返回的必须是用户传递进来的用户名，而不是从数据库取出的用户名</strong>。因为当我们以用户Dumb和密码123456登陆时，其实数据库返回的是我们自己的用户信息，而我们的用户名其实是[Dumb       ]，如果此后的业务逻辑以该用户名为准，那么就不能达到越权的目的了。</li>
 </ol>
-<p>####六、总结<br>上面的利用场景其实更多的还是要看服务端对用户登陆的验证逻辑，虽然限制条件很多，但还是有一定的利用空间。而且这个特性应该还有其它的利用场景有待开发。感谢作者Dhaval Kapil</p>
+<h4 id="六、总结"><a href="#六、总结" class="headerlink" title="六、总结"></a>六、总结</h4><p>上面的利用场景其实更多的还是要看服务端对用户登陆的验证逻辑，虽然限制条件很多，但还是有一定的利用空间。而且这个特性应该还有其它的利用场景有待开发。感谢作者Dhaval Kapil</p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;####一、背景&lt;br&gt;今天看了一篇基于约束条件的SQL注入的文章，感觉非常不错，但亲自实践后又发现了很多问题，虽然利用起来有一定要求，不过作者的思想还是很值得学习的。原文中的主旨思想是利用数据库对空格符的特殊处理方式来达到水平越权的目的。以下内容以MySQL为例，其它数据库可能也存在这个问题（文章作者实验了MySQL和SQLite），我也在MySQL上复现了这个问题。&lt;/p&gt;
+      &lt;h4 id=&quot;一、背景&quot;&gt;&lt;a href=&quot;#一、背景&quot; class=&quot;headerlink&quot; title=&quot;一、背景&quot;&gt;&lt;/a&gt;一、背景&lt;/h4&gt;&lt;p&gt;今天看了一篇基于约束条件的SQL注入的文章，感觉非常不错，但亲自实践后又发现了很多问题，虽然利用起来有一定要求，不过作者的思想还是很值得学习的。原文中的主旨思想是利用数据库对空格符的特殊处理方式来达到水平越权的目的。以下内容以MySQL为例，其它数据库可能也存在这个问题（文章作者实验了MySQL和SQLite），我也在MySQL上复现了这个问题。&lt;/p&gt;
     
     </summary>
     
