@@ -439,7 +439,7 @@
     <link href="http://goodwaf.com/2016/10/20/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
     <id>http://goodwaf.com/2016/10/20/PHP代码审计学习笔记/</id>
     <published>2016-10-20T08:06:59.000Z</published>
-    <updated>2016-12-27T09:35:14.742Z</updated>
+    <updated>2017-04-13T04:59:03.391Z</updated>
     
     <content type="html"><![CDATA[<h4 id="一、GPC"><a href="#一、GPC" class="headerlink" title="一、GPC"></a>一、GPC</h4><ol>
 <li>整数类型不受GPC影响</li>
@@ -451,6 +451,7 @@
 <li>php5.3以后$_REQUEST中不再包含$_COOKIE(可能导致过滤不全)</li>
 <li>GPC为on的时候，在php4和php&lt;5.2.1的情况下GPC不处理数组第一维变量的key</li>
 <li>在对参数进行过滤后又对其进行了其它的操作，如substr，str_replace等，这可能导致转义符被删除</li>
+<li>PHP在接受参数时，如果遇到参数key中包含空格、点号，左中括号，则将它们转换为下划线（即改变了变量名），配合PHP参数污染绕过安全检测</li>
 </ol>
 <h4 id="二、特性"><a href="#二、特性" class="headerlink" title="二、特性"></a>二、特性</h4><table>
 <thead>
