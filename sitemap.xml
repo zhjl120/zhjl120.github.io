@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://goodwaf.com/2017/01/05/pigcms_sqli/</loc>
+    
+    <lastmod>2017-04-13T06:20:51.419Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://goodwaf.com/2017/02/18/jieqicms_sqli/</loc>
+    
+    <lastmod>2017-04-13T06:20:46.307Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://goodwaf.com/2017/01/16/duomicms_sqli/</loc>
+    
+    <lastmod>2017-04-13T06:20:41.043Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://goodwaf.com/2016/10/20/PHP%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
     
     <lastmod>2017-04-13T04:59:03.391Z</lastmod>
