@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://goodwaf.com/2017/01/16/duomicms_sqli/</loc>
+    
+    <lastmod>2017-04-13T06:30:26.643Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://goodwaf.com/2017/01/05/pigcms_sqli/</loc>
     
-    <lastmod>2017-04-13T06:20:51.419Z</lastmod>
+    <lastmod>2017-04-13T06:29:06.463Z</lastmod>
     
   </url>
   
@@ -12,13 +19,6 @@
     <loc>http://goodwaf.com/2017/02/18/jieqicms_sqli/</loc>
     
     <lastmod>2017-04-13T06:20:46.307Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://goodwaf.com/2017/01/16/duomicms_sqli/</loc>
-    
-    <lastmod>2017-04-13T06:20:41.043Z</lastmod>
     
   </url>
   
