@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://goodwaf.com/2017/04/21/phpcms_xss/</loc>
+    
+    <lastmod>2017-05-03T06:24:45.859Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://goodwaf.com/2017/04/21/phpcms_file_down/</loc>
+    
+    <lastmod>2017-05-03T06:22:55.451Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://goodwaf.com/2017/01/16/duomicms_sqli/</loc>
     
     <lastmod>2017-04-13T06:30:26.643Z</lastmod>
